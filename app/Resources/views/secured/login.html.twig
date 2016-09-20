@@ -1,6 +1,6 @@
-{#{% extends ':layout:layouterp.html.twig' %}#}
+{% extends ':layout:layouterp.html.twig' %}
 
-{% block title -%}<title>{#{{tituloLogin}}#}Login</title>{% endblock %}
+{% block title -%}<title>{#{{tituloLogin}}#}ARIASTORE | Login</title>{% endblock %}
 
 {% block customcss %}
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
@@ -10,8 +10,8 @@
 {% block body %}
     <body class="hold-transition login-page">
         <div class="login-box"  >
-            <div class="login-title">
-                <b>ARIA</b>STORE
+            <div class="login-title">               
+                <img  src="{{asset('Resources/src/img/logo.png')}}{#{{settingsIcon}}#}" alt="Logo AriaStore" style="width: 45%;">                
             </div>
             
             <div class="login-box-body">
@@ -54,5 +54,5 @@
 {% endblock %}
 {% block js_extend %}
     <script src='https://www.google.com/recaptcha/api.js'></script>
-    <script type="text/javascript" src="{#{{ asset('Resources/animations/secured/login.js') }}#}"></script>
+    <script type="text/javascript" src="{{ asset('Resources/animations/secured/login.js') }}"></script>
 {% endblock %}    
