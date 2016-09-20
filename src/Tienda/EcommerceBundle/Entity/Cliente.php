@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Cliente
  *
- * @ORM\Table(name="cliente", indexes={@ORM\Index(name="fk_cliente_orden_creada1_idx", columns={"orden_creada_id"})})
+ * @ORM\Table(name="cliente")
  * @ORM\Entity
  */
 class Cliente
@@ -36,13 +36,6 @@ class Cliente
     private $apellido;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="direccion", type="string", length=200, nullable=true)
-     */
-    private $direccion;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="estado", type="integer", nullable=true)
@@ -62,16 +55,6 @@ class Cliente
      * @ORM\Column(name="telefono", type="string", length=15, nullable=true)
      */
     private $telefono;
-
-    /**
-     * @var \OrdenCreada
-     *
-     * @ORM\ManyToOne(targetEntity="OrdenCreada")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="orden_creada_id", referencedColumnName="id")
-     * })
-     */
-    private $ordenCreada;
 
 
 
@@ -129,29 +112,6 @@ class Cliente
     public function getApellido()
     {
         return $this->apellido;
-    }
-
-    /**
-     * Set direccion
-     *
-     * @param string $direccion
-     * @return Cliente
-     */
-    public function setDireccion($direccion)
-    {
-        $this->direccion = $direccion;
-
-        return $this;
-    }
-
-    /**
-     * Get direccion
-     *
-     * @return string 
-     */
-    public function getDireccion()
-    {
-        return $this->direccion;
     }
 
     /**
@@ -221,28 +181,5 @@ class Cliente
     public function getTelefono()
     {
         return $this->telefono;
-    }
-
-    /**
-     * Set ordenCreada
-     *
-     * @param \Tienda\EcommerceBundle\Entity\OrdenCreada $ordenCreada
-     * @return Cliente
-     */
-    public function setOrdenCreada(\Tienda\EcommerceBundle\Entity\OrdenCreada $ordenCreada = null)
-    {
-        $this->ordenCreada = $ordenCreada;
-
-        return $this;
-    }
-
-    /**
-     * Get ordenCreada
-     *
-     * @return \Tienda\EcommerceBundle\Entity\OrdenCreada 
-     */
-    public function getOrdenCreada()
-    {
-        return $this->ordenCreada;
     }
 }

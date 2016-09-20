@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Producto" table="producto">
+    <indexes>
+      <index name="fk_producto_categoria_idx" columns="categoria_id"/>
+      <index name="fk_producto_color1_idx" columns="color_id"/>
+      <index name="fk_producto_talla1_idx" columns="talla_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nombre" type="string" column="nombre" length="200" nullable="true"/>
+    <field name="precio" type="decimal" column="precio" precision="15" scale="2" nullable="true"/>
+    <field name="numeroreferencia" type="string" column="numeroReferencia" length="30" nullable="true"/>
+    <field name="estado" type="boolean" column="estado" nullable="true"/>
+    <field name="descripcion" type="string" column="descripcion" length="600" nullable="true"/>
+    <field name="link" type="string" column="link" length="200" nullable="true"/>
+    <field name="ingredientes" type="string" column="ingredientes" length="500" nullable="true"/>
+    <field name="presentacion" type="string" column="presentacion" length="150" nullable="true"/>
+    <field name="stock" type="integer" column="stock" nullable="true"/>
+    <many-to-one field="talla" target-entity="Talla">
+      <join-columns>
+        <join-column name="talla_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="color" target-entity="Color">
+      <join-columns>
+        <join-column name="color_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="categoria" target-entity="Categoria">
+      <join-columns>
+        <join-column name="categoria_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

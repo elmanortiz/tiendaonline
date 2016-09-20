@@ -43,6 +43,20 @@ class CtlUsuario
     private $salt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="ultimointento", type="datetime", nullable=true)
+     */
+    private $ultimointento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="intentos", type="integer", nullable=true)
+     */
+    private $intentos;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="estado", type="integer", nullable=true)
@@ -160,6 +174,52 @@ class CtlUsuario
     public function getSalt()
     {
         return $this->salt;
+    }
+
+    /**
+     * Set ultimointento
+     *
+     * @param \DateTime $ultimointento
+     * @return CtlUsuario
+     */
+    public function setUltimointento($ultimointento)
+    {
+        $this->ultimointento = $ultimointento;
+
+        return $this;
+    }
+
+    /**
+     * Get ultimointento
+     *
+     * @return \DateTime 
+     */
+    public function getUltimointento()
+    {
+        return $this->ultimointento;
+    }
+
+    /**
+     * Set intentos
+     *
+     * @param integer $intentos
+     * @return CtlUsuario
+     */
+    public function setIntentos($intentos)
+    {
+        $this->intentos = $intentos;
+
+        return $this;
+    }
+
+    /**
+     * Get intentos
+     *
+     * @return integer 
+     */
+    public function getIntentos()
+    {
+        return $this->intentos;
     }
 
     /**

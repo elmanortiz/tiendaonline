@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * OrdenCreada
  *
- * @ORM\Table(name="orden_creada", indexes={@ORM\Index(name="fk_orden_creada_departamento1_idx", columns={"departamento_id"}), @ORM\Index(name="fk_orden_creada_estado_paquete1_idx", columns={"estado_paquete_id"})})
+ * @ORM\Table(name="orden_creada", indexes={@ORM\Index(name="fk_orden_creada_estado_paquete1_idx", columns={"estado_paquete_id"}), @ORM\Index(name="fk_orden_creada_cliente1_idx", columns={"cliente_id"}), @ORM\Index(name="fk_orden_creada_municipio1_idx", columns={"municipio_id"})})
  * @ORM\Entity
  */
 class OrdenCreada
@@ -52,6 +52,13 @@ class OrdenCreada
     /**
      * @var string
      *
+     * @ORM\Column(name="direccion", type="string", length=200, nullable=false)
+     */
+    private $direccion;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="numero_referencia", type="string", length=30, nullable=true)
      */
     private $numeroReferencia;
@@ -71,14 +78,14 @@ class OrdenCreada
     private $estado;
 
     /**
-     * @var \Departamento
+     * @var \Cliente
      *
-     * @ORM\ManyToOne(targetEntity="Departamento")
+     * @ORM\ManyToOne(targetEntity="Cliente")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="departamento_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="cliente_id", referencedColumnName="id")
      * })
      */
-    private $departamento;
+    private $cliente;
 
     /**
      * @var \EstadoPaquete
@@ -89,6 +96,16 @@ class OrdenCreada
      * })
      */
     private $estadoPaquete;
+
+    /**
+     * @var \Municipio
+     *
+     * @ORM\ManyToOne(targetEntity="Municipio")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="municipio_id", referencedColumnName="id")
+     * })
+     */
+    private $municipio;
 
 
 
@@ -195,6 +212,29 @@ class OrdenCreada
     }
 
     /**
+     * Set direccion
+     *
+     * @param string $direccion
+     * @return OrdenCreada
+     */
+    public function setDireccion($direccion)
+    {
+        $this->direccion = $direccion;
+
+        return $this;
+    }
+
+    /**
+     * Get direccion
+     *
+     * @return string 
+     */
+    public function getDireccion()
+    {
+        return $this->direccion;
+    }
+
+    /**
      * Set numeroReferencia
      *
      * @param string $numeroReferencia
@@ -264,26 +304,26 @@ class OrdenCreada
     }
 
     /**
-     * Set departamento
+     * Set cliente
      *
-     * @param \Tienda\EcommerceBundle\Entity\Departamento $departamento
+     * @param \Tienda\EcommerceBundle\Entity\Cliente $cliente
      * @return OrdenCreada
      */
-    public function setDepartamento(\Tienda\EcommerceBundle\Entity\Departamento $departamento = null)
+    public function setCliente(\Tienda\EcommerceBundle\Entity\Cliente $cliente = null)
     {
-        $this->departamento = $departamento;
+        $this->cliente = $cliente;
 
         return $this;
     }
 
     /**
-     * Get departamento
+     * Get cliente
      *
-     * @return \Tienda\EcommerceBundle\Entity\Departamento 
+     * @return \Tienda\EcommerceBundle\Entity\Cliente 
      */
-    public function getDepartamento()
+    public function getCliente()
     {
-        return $this->departamento;
+        return $this->cliente;
     }
 
     /**
@@ -307,5 +347,28 @@ class OrdenCreada
     public function getEstadoPaquete()
     {
         return $this->estadoPaquete;
+    }
+
+    /**
+     * Set municipio
+     *
+     * @param \Tienda\EcommerceBundle\Entity\Municipio $municipio
+     * @return OrdenCreada
+     */
+    public function setMunicipio(\Tienda\EcommerceBundle\Entity\Municipio $municipio = null)
+    {
+        $this->municipio = $municipio;
+
+        return $this;
+    }
+
+    /**
+     * Get municipio
+     *
+     * @return \Tienda\EcommerceBundle\Entity\Municipio 
+     */
+    public function getMunicipio()
+    {
+        return $this->municipio;
     }
 }

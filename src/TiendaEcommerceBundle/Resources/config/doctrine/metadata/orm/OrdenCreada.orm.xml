@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="OrdenCreada" table="orden_creada">
+    <indexes>
+      <index name="fk_orden_creada_estado_paquete1_idx" columns="estado_paquete_id"/>
+      <index name="fk_orden_creada_cliente1_idx" columns="cliente_id"/>
+      <index name="fk_orden_creada_municipio1_idx" columns="municipio_id"/>
+    </indexes>
+    <id name="id" type="bigint" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="cookie" type="bigint" column="cookie" nullable="true"/>
+    <field name="nombreProd" type="string" column="nombre_prod" length="500" nullable="true"/>
+    <field name="precio" type="decimal" column="precio" precision="15" scale="2" nullable="true"/>
+    <field name="cantidad" type="integer" column="cantidad" nullable="true"/>
+    <field name="direccion" type="string" column="direccion" length="200" nullable="false"/>
+    <field name="numeroReferencia" type="string" column="numero_referencia" length="30" nullable="true"/>
+    <field name="imagen" type="string" column="imagen" length="255" nullable="true"/>
+    <field name="estado" type="string" column="estado" length="45" nullable="true"/>
+    <many-to-one field="municipio" target-entity="Municipio">
+      <join-columns>
+        <join-column name="municipio_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="estadoPaquete" target-entity="EstadoPaquete">
+      <join-columns>
+        <join-column name="estado_paquete_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="cliente" target-entity="Cliente">
+      <join-columns>
+        <join-column name="cliente_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>
