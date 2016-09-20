@@ -122,4 +122,8 @@ class Persona
     {
         return $this->correo;
     }
+    
+    public function __toString() {
+        return $this->nombres ? $this->nombres . ' ' . $this->apellidos : '';
+    } 
 }

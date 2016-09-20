@@ -10,6 +10,8 @@
     <field name="username" type="string" column="username" length="255" nullable="true"/>
     <field name="password" type="string" column="password" length="255" nullable="true"/>
     <field name="salt" type="string" column="salt" length="255" nullable="true"/>
+    <field name="ultimointento" type="datetime" column="ultimointento" nullable="true"/>
+    <field name="intentos" type="integer" column="intentos" nullable="true"/>
     <field name="estado" type="integer" column="estado" nullable="true"/>
     <many-to-one field="persona" target-entity="Persona">
       <join-columns>

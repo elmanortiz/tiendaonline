@@ -2,6 +2,7 @@
 
 namespace Tienda\EcommerceBundle\Entity;
 
+use Symfony\Component\Security\Core\Role\RoleInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ctl_rol")
  * @ORM\Entity
  */
-class CtlRol
+class CtlRol implements RoleInterface
 {
     /**
      * @var integer
@@ -24,7 +25,7 @@ class CtlRol
     /**
      * @var string
      *
-     * @ORM\Column(name="rol", type="string", length=45, nullable=true)
+     * @ORM\Column(name="rol", type="string", length=75, nullable=false)
      */
     private $rol;
 
@@ -76,6 +77,14 @@ class CtlRol
     {
         return $this->rol;
     }
+    
+    public function getRole() {
+        return $this->getRol();
+    }
+    
+    public function __toString() {
+        return $this->getRole();
+    } 
 
     /**
      * Add ctlUsuario

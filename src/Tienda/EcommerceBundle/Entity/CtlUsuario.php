@@ -2,6 +2,8 @@
 
 namespace Tienda\EcommerceBundle\Entity;
 
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ctl_usuario", indexes={@ORM\Index(name="fk_ctl_usuario_persona1_idx", columns={"persona_id"})})
  * @ORM\Entity
  */
-class CtlUsuario
+class CtlUsuario implements AdvancedUserInterface, \Serializable
 {
     /**
      * @var integer
@@ -24,42 +26,42 @@ class CtlUsuario
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=255, nullable=true)
+     * @ORM\Column(name="username", type="string", length=255, nullable=false)
      */
     private $username;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=255, nullable=true)
+     * @ORM\Column(name="password", type="string", length=255, nullable=false)
      */
     private $password;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="salt", type="string", length=255, nullable=true)
+     * @ORM\Column(name="salt", type="string", length=255, nullable=false)
      */
     private $salt;
-
+        
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="ultimointento", type="datetime", nullable=true)
      */
     private $ultimointento;
-
+    
     /**
      * @var integer
      *
      * @ORM\Column(name="intentos", type="integer", nullable=true)
      */
     private $intentos;
-
+    
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="estado", type="integer", nullable=true)
+     * @ORM\Column(name="estado", type="boolean", nullable=false)
      */
     private $estado;
 
@@ -87,7 +89,9 @@ class CtlUsuario
      * )
      */
     private $ctlRol;
-
+    
+    private $isEnabled; // = false; 
+            
     /**
      * Constructor
      */
@@ -106,7 +110,7 @@ class CtlUsuario
     {
         return $this->id;
     }
-
+           
     /**
      * Set username
      *
@@ -175,7 +179,7 @@ class CtlUsuario
     {
         return $this->salt;
     }
-
+    
     /**
      * Set ultimointento
      *
@@ -221,11 +225,11 @@ class CtlUsuario
     {
         return $this->intentos;
     }
-
+    
     /**
      * Set estado
      *
-     * @param integer $estado
+     * @param boolean $estado
      * @return CtlUsuario
      */
     public function setEstado($estado)
@@ -238,7 +242,7 @@ class CtlUsuario
     /**
      * Get estado
      *
-     * @return integer 
+     * @return boolean 
      */
     public function getEstado()
     {
@@ -300,4 +304,80 @@ class CtlUsuario
     {
         return $this->ctlRol;
     }
+    
+    /**
+     * Get roles
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getRoles()
+    {
+        return $this->ctlRol->toArray(); //IMPORTANTE: el mecanismo de seguridad de Sf2 requiere ésto como un array
+    }        
+    
+     /**
+     * Compares this user to another to determine if they are the same.
+     *
+     * @param UserInterface $user The user
+     * @return boolean True if equal, false othwerwise.
+     */
+    public function equals(UserInterface $user) {
+        return md5($this->getUsername()) == md5($user->getUsername());
+ 
+    }
+ 
+    /**
+     * Erases the user credentials.
+     */
+    public function eraseCredentials() {
+ 
+    }    
+    
+    /**
+     * @see \Serializable::serialize()
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+        ));
+    }
+    
+    /**
+     * @see \Serializable::unserialize()
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            ) = unserialize($serialized);
+    }
+    
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return  !$this->isEnabled;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        if ((int)$this->estado == 1)
+            $this->isEnabled = true;
+        else
+            $this->isEnabled  = false;
+        return  $this->isEnabled;
+    }
+    
+    public function __toString() {
+        return $this->username ? $this->username : '';
+    }            
 }
