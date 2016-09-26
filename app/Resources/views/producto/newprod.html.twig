@@ -32,8 +32,8 @@
     <div class="col-md-10" style="margin-top: 0px;"> {#Cuerpo de la interfaz#}
         <a href="{{path('admin_producto_index')}}" ><button type="button" class="btn btn-default" style="margin-top: 0px; margin-bottom: 10px;">Atras</button></a>
                 <div class="row">
-                    <form id="newProduct" method="POST" action="{{path('inventariotienda_editprod')}}" enctype="multipart/form-data">
-                        <input name="idproducto" type="text" class="form-control validateInput" value="{{productos[0].id}}" style="display:none;" placeholder="Codigo de Referencia" />
+                    <form id="newProduct" method="POST" action="{{path('inventariotienda_insertprod')}}" enctype="multipart/form-data">
+                        
                         {#<form id="newProduct" method="POST" action="path('inventariobeard_insertprod')" enctype="multipart/form-data">#}
                         {#<div class="container" style="margin-top: 0px;">#}
                             <div class="row" style="margin-left: 5px;">
@@ -41,9 +41,9 @@
                                     <div class="form-group">
                                         <label for="nombreEmpleado" id="t">Categoria</label>
                                         <select required class="form-control validateInput" id="categoria" name="categoria" placeholder=Categoria">
-                                            <option value="{{productos[0].idcat}}" selected style="margin-bottom: 10px;">{{productos[0].nomcat}}</option>                           
-                                            {% for  categorias in ctlcategorias %}
-                                                <option value="{{categorias.id}}">{{categorias.nombre}}</option>  
+                                            <option value="0" selected style="margin-bottom: 10px;">Seleccione una categoria</option>                           
+                                            {% for catprod in categoriaproducto %}
+                                                <option value="{{ catprod.id  }}">{{catprod.nombre }}</option>  
                                             {% endfor %}          
                                         </select>   
                                     </div>
@@ -52,12 +52,12 @@
                                     <div id="sc"></div>                                                                      
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Nombre de Producto</label> 
-                                        <input id="nombreprod" name="nombreprod" type="text" class="form-control validateInput" id="exampleInputEmail1" value="{{productos[0].nombre}}" placeholder="Nombre de Producto" />
+                                        <input id="nombreprod" name="nombreprod" type="text" class="form-control validateInput" id="exampleInputEmail1" placeholder="Nombre de Producto" />
                                     </div>
 
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Codigo de Referencia</label> 
-                                        <input id="stock" name="codigo" type="text" class="form-control validateInput" value="{{productos[0].codigo}}" placeholder="Codigo de Referencia" />
+                                        <input id="stock" name="codigo" type="text" class="form-control validateInput" placeholder="Codigo de Referencia" />
                                         {#<div class="input-group">
                                             <div class="input-group-addon">PROD</div>
                                             <input id="codigo" name="codigo" type="text" class="form-control" id="exampleInputEmail1" placeholder="Codigo de Referencia" />
@@ -69,7 +69,7 @@
                                         <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
                                         <div class="input-group">
                                             <div class="input-group-addon">$</div>
-                                            <input id="precio" name="precio" type="text" class="form-control validateInput" id="exampleInputEmail1" value="{{productos[0].precio}}" placeholder="Precio" />
+                                            <input id="precio" name="precio" type="text" class="form-control validateInput" id="exampleInputEmail1" placeholder="Precio" />
                                         </div>
                                     </div>
 
@@ -87,45 +87,25 @@
                                     </div>#}
                                     <label for="exampleInputEmail1">Colores (Elija un color)</label><br>
                                     <div class="form-group">
-                                    {% for ctcolor in ctlcolores %}                                                                                                                                                                                                            
-                                        {% for color in colores %}    
-                                            {% if ctcolor.id == color.coid%}
-                                                <input id="" class="chcolor" name="color[]" type="checkbox" value="{{ctcolor.id}} {#{{color.idcopro}}#}" style="margin-right: 5px;" checked>
-                                                {#{{color.colnom}}#}
-                                                {{ctcolor.nombre}}
-                                                <br>
-                                            {% else%}
-                                                <input id="" class="chcolor checked" name="color[]" type="checkbox" value="{{ctcolor.id}} {#{{color.idcopro}}#}" style="margin-right: 5px;">
-                                                {#{{color.colnom}}#}
-                                                {{ctcolor.nombre}}
-                                                <br>
-                                            {% endif %}
-                                        {% endfor %}
+                                    {% for color in colores %}                                                                                                                                                                                                            
+                                            <input id="" class="chcolor" name="color[]" type="checkbox" value="{{color.id}}" style="margin-right: 5px;">
+                                            {{color.nombre}}
+                                            <br>                                        
                                     {% endfor %}
                                     </div>
                                     
                                     <label for="exampleInputEmail1">Tallas (Elija al menos una talla)</label><br>
                                     <div class="form-group">
-                                    {% for cttalla in ctltallas %} 
-                                        {% for talla in tallas if cttalla.id == talla.taid %}  
-                                            {#{% if cttalla.id == talla.taid%}#}
-                                                <input id="" class="chtalla" name="talla[]" type="checkbox" value="{{cttalla.id}}  {#{{talla.idtapro}}#}" style="margin-right: 5px;" checked>
-                                                {{cttalla.nombre}}
-                                                {#{{talla.tanom}}#}
-                                                <br> 
-                                            {#{% endif %}  #} 
-                                        {% else %}
-                                            <input id="" class="chtalla" name="talla[]" type="checkbox" value="{{cttalla.id}}  {#{{talla.idtapro}}#}" style="margin-right: 5px;" >
-                                                {{cttalla.nombre}}
-                                                {#{{talla.tanom}}#}
-                                                <br> 
-                                        {% endfor %}                                            
+                                    {% for talla in tallas %}                                                                                                                                                                                                            
+                                            <input id="" class="chtalla" name="talla[]" type="checkbox" value="{{talla.id}}" style="margin-right: 5px;">
+                                            {{talla.nombre}}
+                                            <br>                                        
                                     {% endfor %}
                                     </div>
                                     
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Existencias totales</label> 
-                                        <input id="stock" name="stock" type="text" class="form-control validateInput" value="{{productos[0].stock}}" placeholder="Cantidad total de productos actules + nuevos" />
+                                        <input id="stock" name="stock" type="text" class="form-control validateInput" placeholder="Cantidad total de productos actules + nuevos" />
                                     </div>
                                     
                                     {#<div class="form-group">                                                                                
@@ -133,21 +113,20 @@
                                         <input id="destacado" name="destacado" type="checkbox" value="1">
                                     </div>#}                                                                       
                                     
-                                    
                                     <div class="form-group">                                                                                
                                         <label for="exampleInputEmail1">Mostrar como no disponible</label><br>
-                                        <input id="disponibilidad" name="disponibilidad" type="checkbox" value="{% if productos[0].dispo ==0 %} 0 {%else%} 1 {%endif%}" {% if productos[0].dispo ==0 %} checked {% endif %} >
+                                        <input id="disponibilidad" name="disponibilidad" type="checkbox" value="1">
                                     </div>
                                     
-                                    <div id="nodispo" class="form-group" {% if productos[0].dispo ==1 %}style="display: none;"{% endif %}>
+                                    <div id="nodispo" class="form-group" style="display: none;">
                                         <label for="exampleInputEmail1">Mensaje por falta de existencias</label> 
-                                        <input id="stock" name="msjexistencia" type="text" class="form-control" value="{{productos[0].msj}}" placeholder="Ejemplo: Disponibles la proxima semana" />
+                                        <input id="stock" name="msjexistencia" type="text" class="form-control" placeholder="Ejemplo: Disponibles la proxima semana" />
                                     </div>
                                 </div>
                                     
 
                                 <div class="col-md-6">
-                                    <p class="text-center" style="margin-bottom:0px;">AGREGAR O QUITAR MATERIAL DE PRODUCTO</p>
+                                    <p class="text-center" style="margin-bottom: 0px;">AGREGAR O QUITAR MATERIAL DE PRODUCTO</p>
                                     <!--<p class="pull-left"><a href="#"><button type="button" class="btn btn-default">Add</button></a></p>-->
                                     <!--<p class="pull-right"><a href="#"><button type="button" class="btn btn-default">Delete</button></a></p>-->
 
@@ -160,16 +139,12 @@
                                             <!-- <td><input type="text" class="form-control" id="cantidad[]" name ="cantidad[]" placeholder="Ingrese la cantidad" onkeypress="return validNumber(event)"></td>-->
                                             <!--</tr>-->
                                         </thead>
-                                        <tbody>
-                                            {% for material in materiales%}
-                                            <tr {% if nmateriales == 0 %}class="hidden"{% endif %}>
-                                                
-                                                <TD><INPUT  class="form-control" type="checkbox" NAME="ordenBox[]"/></TD>
-                                                <TD><INPUT  class="form-control" id="atributo[]" name ="atributo[]" type="text" value="{{material.nommate}}" placeholder="Ingrese nombre atributo"/></TD>
-                                                <TD><INPUT  class="form-control temp" id="porcentaje[]" name ="porcentaje[]" type="text" value="{{material.por}}" placeholder="Ingrese porcentaje atributo" onkeypress="return validNumber(event);"/></TD>
-                                                <TD><INPUT  class="form-control" type="text" style="display:none;" value="{{material.id}}" id="idmaterial[]" name="idmaterial[]"/></TD>
-                                            </tr> 
-                                            {% endfor %}
+                                        <tbody>                                                                                        
+                                            <tr class="hidden">
+                                                <TD><INPUT class="hidden" class="form-control" type="checkbox" NAME="chk"/></TD>
+                                                <TD><INPUT class="hidden" class="form-control" id="atributo[]" name ="atributo[]" type="text" placeholder="Ingrese nombre atributo"/></TD>
+                                                <TD><INPUT class="hidden" class="form-control temp" id="porcentaje[]" name ="porcentaje[]" type="text" placeholder="Ingrese porcentaje atributo" onkeypress="return validNumber(event)"/></TD>
+                                            </tr>                                                                                        
                                         </tbody>
                                     </table>
                                 </div>
@@ -188,7 +163,7 @@
                                 <div class="col-md-4" style="margin-top: 10px;">
 
                                     <div class="form-group">
-                                        <input id="userfile" type="file" name="userfile">        
+                                        <input class="validateInput" id="userfile" type="file" name="userfile">        
                                     </div>
                                     <div class="form-group">
                                         <input id="userfile2" type="file" name="userfile2"> 
@@ -200,12 +175,12 @@
                                     <input id="userfile5" type="file" name="userfile5">  #}    
                                 </div>
                                 <div id="imagenp" class="col-md-5 hidden-sm hidden-xs"><!--para PC-->
-                                    <img id="img_destino0" name="img_destino" src="{{asset('Resources/src/img/producto/')}}{{productos[0].img1}}" alt="imagen" style="width: 100%; margin-top:10px;">
+                                    <img id="img_destino0" name="img_destino" src="http://placehold.it/500x500" alt="imagen" style="width: 100%; margin-top:10px;">
                                 </div>
-                                <div class="col-md-1">                                    
-                                    <img id="img_destino" name="img_destino" src="{{asset('Resources/src/img/producto/')}}{{productos[0].img1}}" alt="imagen" style="width: 100%; margin-top:10px;"    class="hoverimg">                                    
-                                    <img id="img_destino2" name="img_destino2" src="{{asset('Resources/src/img/producto/')}}{{productos[0].img2}}" alt="imagen" style="width: 100%; margin-top:10px; " class="hoverimg">
-                                    <img id="img_destino3" name="img_destino3" src="{{asset('Resources/src/img/producto/')}}{{productos[0].img3}}" alt="imagen" style="width: 100%; margin-top:10px;"  class="hoverimg">
+                                <div class="col-md-1">
+                                    <img id="img_destino" name="img_destino" src="http://placehold.it/200x200" alt="imagen" style="width: 100%; margin-top:10px;"    class="hoverimg">
+                                    <img id="img_destino2" name="img_destino2" src="http://placehold.it/200x200" alt="imagen" style="width: 100%; margin-top:10px; " class="hoverimg">
+                                    <img id="img_destino3" name="img_destino3" src="http://placehold.it/200x200" alt="imagen" style="width: 100%; margin-top:10px;"  class="hoverimg">
                                     {#<img id="img_destino4" name="img_destino4" src="http://placehold.it/200x200" alt="imagen" style="width: 100%; margin-top:10px;"  class="hoverimg">
                                     <img id="img_destino5" name="img_destino5" src="http://placehold.it/200x200" alt="imagen" style="width: 100%; margin-top:10px;"  class="hoverimg">#}
                                 </div>
@@ -227,8 +202,8 @@
                         </div>    
                     </div>#}
                 
-                <p id="enviar" class="text-center"><button type="button" class="btn btn-default" style="margin-top: 20px;">Actualizar Producto</button></p>    
-                <p class="text-center"><button id="submit" type="submit" class="btn btn-default" style="margin-top: 10px; display: none;">Actualizar Producto</button></p>
+                <p id="enviar" class="text-center"><button type="button" class="btn btn-default" style="margin-top: 20px;">Ingresar Producto</button></p>    
+                <p class="text-center"><button id="submit" type="submit" class="btn btn-default" style="margin-top: 10px; display: none;">Ingresar Producto</button></p>
 
                 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>                                                            
@@ -373,7 +348,7 @@
    
    <script>
         $( document ).ready(function() {
-            //$("#nodispo").hide();
+            $("#nodispo").hide();
             $(".hoverimg").on('click', function(e) {
 
                 var imgp= $(this).attr('src');
@@ -428,17 +403,6 @@
      element4.setAttribute("id", "porcentaje[]");
      element4.setAttribute("name", "porcentaje[]");
      element4.setAttribute("onkeypress", "return validNumber(event)");
-     //element3.setAttribute("onkeypress", "return validNumber(event)");
-       element4.type = "text";
-       cell4.appendChild(element4);
-       
-     var cell5 = row.insertCell(3);
-       var element5 = document.createElement("input");
-     element5.setAttribute("class", "form-control temp");
-     element5.setAttribute("placeholder", "idmaterial");
-     element5.setAttribute("id", "idmaterial[]");
-     element5.setAttribute("name", "idmaterial[]");
-     element5.setAttribute("onkeypress", "return validNumber(event)");
      //element3.setAttribute("onkeypress", "return validNumber(event)");
        element4.type = "text";
        cell4.appendChild(element4);

@@ -27,14 +27,13 @@ class Talla
      * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     private $nombre;
-
-        /**
+    
+    /**
      * @var boolean
      *
      * @ORM\Column(name="estado", type="boolean", nullable=false)
      */
     private $estado;
-    
 
 
     /**

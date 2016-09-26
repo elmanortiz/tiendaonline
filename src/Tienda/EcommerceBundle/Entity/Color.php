@@ -27,7 +27,7 @@ class Color
      * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     private $nombre;
-        
+    
     /**
      * @var boolean
      *

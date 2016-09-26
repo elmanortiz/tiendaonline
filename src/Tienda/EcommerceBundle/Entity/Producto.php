@@ -48,6 +48,21 @@ class Producto
      * @ORM\Column(name="estado", type="boolean", nullable=true)
      */
     private $estado;
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="destacar", type="boolean", nullable=true)
+     */
+    private $destacar;
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="disponible", type="boolean", nullable=true)
+     */
+    private $disponible;
+    
 
     /**
      * @var string
@@ -76,6 +91,13 @@ class Producto
      * @ORM\Column(name="presentacion", type="string", length=150, nullable=true)
      */
     private $presentacion;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mensaje", type="string", nullable=true)
+     */
+    private $mensaje;
 
     /**
      * @var integer
@@ -93,29 +115,7 @@ class Producto
      * })
      */
     private $categoria;
-
-    /**
-     * @var \Color
-     *
-     * @ORM\ManyToOne(targetEntity="Color")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="color_id", referencedColumnName="id")
-     * })
-     */
-    private $color;
-
-    /**
-     * @var \Talla
-     *
-     * @ORM\ManyToOne(targetEntity="Talla")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="talla_id", referencedColumnName="id")
-     * })
-     */
-    private $talla;
-
-
-
+   
     /**
      * Get id
      *
@@ -217,28 +217,74 @@ class Producto
     {
         return $this->estado;
     }
-
+        
     /**
-     * Set descripcion
+     * Set destacar
      *
-     * @param string $descripcion
+     * @param boolean $destacar
      * @return Producto
      */
-    public function setDescripcion($descripcion)
+    public function setDestacar($destacar)
     {
-        $this->descripcion = $descripcion;
+        $this->destacar = $destacar;
 
         return $this;
     }
 
     /**
-     * Get descripcion
+     * Get destacar
+     *
+     * @return boolean 
+     */
+    public function getDestacar()
+    {
+        return $this->destacar;
+    }
+        
+    /**
+     * Set disponible
+     *
+     * @param boolean $disponible
+     * @return Producto
+     */
+    public function setDisponible($disponible)
+    {
+        $this->disponible = $disponible;
+
+        return $this;
+    }
+
+    /**
+     * Get disponible
+     *
+     * @return boolean 
+     */
+    public function getDisponible()
+    {
+        return $this->disponible;
+    }
+    
+    /**
+     * Set mensaje
+     *
+     * @param string $mensaje
+     * @return Mensaje
+     */
+    public function setMensaje($mensaje)
+    {
+        $this->mensaje = $mensaje;
+
+        return $this;
+    }
+
+    /**
+     * Get mensaje
      *
      * @return string 
      */
-    public function getDescripcion()
+    public function getMensaje()
     {
-        return $this->descripcion;
+        return $this->mensaje;
     }
 
     /**
@@ -354,51 +400,5 @@ class Producto
     public function getCategoria()
     {
         return $this->categoria;
-    }
-
-    /**
-     * Set color
-     *
-     * @param \Tienda\EcommerceBundle\Entity\Color $color
-     * @return Producto
-     */
-    public function setColor(\Tienda\EcommerceBundle\Entity\Color $color = null)
-    {
-        $this->color = $color;
-
-        return $this;
-    }
-
-    /**
-     * Get color
-     *
-     * @return \Tienda\EcommerceBundle\Entity\Color 
-     */
-    public function getColor()
-    {
-        return $this->color;
-    }
-
-    /**
-     * Set talla
-     *
-     * @param \Tienda\EcommerceBundle\Entity\Talla $talla
-     * @return Producto
-     */
-    public function setTalla(\Tienda\EcommerceBundle\Entity\Talla $talla = null)
-    {
-        $this->talla = $talla;
-
-        return $this;
-    }
-
-    /**
-     * Get talla
-     *
-     * @return \Tienda\EcommerceBundle\Entity\Talla 
-     */
-    public function getTalla()
-    {
-        return $this->talla;
-    }
+    }   
 }

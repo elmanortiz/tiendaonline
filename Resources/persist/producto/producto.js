@@ -123,15 +123,27 @@
             var text = $(this).prop('tagName');            
             if (text === 'INPUT') {                
                 if ($(this).is(':checked')) {
-                    if(selec >= 1){
-
+                    if(selec > 1){
                         $('.btnAdd').addClass('hidden');
                         $('.btnDelete').removeClass('hidden');
+                        $('.btnShow').addClass('hidden');
                         $(this).prop({'checked': true});
-                    }                                       
+                    }else{
+                        $('.btnAdd').addClass('hidden');
+                        $('.btnDelete').removeClass('hidden');
+                        $('.btnShow').removeClass('hidden');
+                        $(this).prop({'checked': true});
+                    }                           
                 }else{
+                        if(selec === 1 ){                            
+                            $('.btnAdd').addClass('hidden');
+                            $('.btnDelete').removeClass('hidden');
+                            $('.btnShow').removeClass('hidden');
+                            $(this).prop({'checked': false});
+                        }
                         if(selec === 0 ){                            
                             $('.btnAdd').removeClass('hidden');
+                            $('.btnShow').addClass('hidden');
                             $('.btnDelete').addClass('hidden');
                             $(this).prop({'checked': false});
                         }
@@ -151,35 +163,30 @@
         
         
         /*********Select row for edit **********/
-        $(document).on('click', '.sorting_1', function (event) {
+        $(document).on('click', '.btnShow', function (event) {
             //$('.btnAdd').addClass('hidden');
-            $('.panel-heading').empty();
-            $('.panel-heading').append('Edit');            
-            var id = $(this).prev().children().prop('id');
+            //$('.panel-heading').empty();
+            //$('.panel-heading').append('Edit');
+            var id=0;
             
-            $.ajax({
-                type: 'POST',                    
-                data: {id:id},
-                url: Routing.generate('admin_tipoindustry_read'),
-                success: function (data)
-                {
-                    console.log(data.name);
-                    $('#txtName').val(data.name);
-                    $('#id').val(data.id);                    
-                    $('#pnAdd').slideDown();                            
-                },
-                error: function (xhr, status)
-                {
-
-                }
-            });// Fin ajax                
+            $('.chkItem').each(function () {
+                //total++;
+                if ($(this).is(':checked')) {
+                    id = $(this).parent().prop('id');
+                    //selec++;
+                }                            
+            });  
+                        
+            var url = Routing.generate('admin_showedit_producto',{'id':id});
+            window.open(url, "_self");             
+            
         });
         /************ Fin select row for edit ***********/
         
         /************ Delete item or tems of ctlindustria ***************************************/
         $(document).on('click', '.btnDelete', function (event) {
             var ids=[];
-            var table = $('#typeIndustry').DataTable();
+            var table = $('#producto').DataTable();
             $('.chkItem').each(function () {
                 
                 if ($(this).is(':checked')) {  
@@ -202,7 +209,7 @@
                     $.ajax({
                         type: 'POST',
                         data: {ids: ids},
-                        url: Routing.generate('admin_tipoindustry_delete'),
+                        url: Routing.generate('admin_producto_delete'),
                         success: function (data)
                         {                            
                             $('.btnDelete').addClass('hidden');
