@@ -404,7 +404,7 @@ class ProductoController extends Controller
         $stm->execute();
         $result_materiales = $stm->fetchAll();
         $nmateriales = count($result_materiales);
-        var_dump($nmateriales);
+        
         /**Para colores**/
         $stm = $this->container->get('database_connection')->prepare($sqlColores);
         $stm->execute();
