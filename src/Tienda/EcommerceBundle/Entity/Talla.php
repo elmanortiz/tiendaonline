@@ -28,6 +28,13 @@ class Talla
      */
     private $nombre;
 
+        /**
+     * @var boolean
+     *
+     * @ORM\Column(name="estado", type="boolean", nullable=false)
+     */
+    private $estado;
+    
 
 
     /**
@@ -62,4 +69,31 @@ class Talla
     {
         return $this->nombre;
     }
+    
+    /**
+     * Set estado
+     *
+     * @param boolean $estado
+     * @return Talla
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return boolean 
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+    
+    public function __toString() {
+        return $this->nombre ? $this->nombre : '';
+    } 
 }

@@ -48,6 +48,13 @@ class OrdenCreada
      * @ORM\Column(name="cantidad", type="integer", nullable=true)
      */
     private $cantidad;
+    
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_registro", type="datetime", nullable=false)
+     */
+    private $fechaRegistro;
 
     /**
      * @var string
@@ -106,6 +113,26 @@ class OrdenCreada
      * })
      */
     private $municipio;
+    
+    /**
+     * @var \Producto
+     *
+     * @ORM\ManyToOne(targetEntity="Producto")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="producto", referencedColumnName="id")
+     * })
+     */
+    private $producto;
+    
+    /**
+     * @var \Shipping
+     *
+     * @ORM\ManyToOne(targetEntity="Shipping")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="shipping", referencedColumnName="id")
+     * })
+     */
+    private $shipping;
 
 
 
@@ -210,6 +237,29 @@ class OrdenCreada
     {
         return $this->cantidad;
     }
+    
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return OrdenCreada
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
 
     /**
      * Set direccion
@@ -238,7 +288,7 @@ class OrdenCreada
      * Set numeroReferencia
      *
      * @param string $numeroReferencia
-     * @return OrdenCreada
+     * @return OrdenCreada  
      */
     public function setNumeroReferencia($numeroReferencia)
     {
@@ -370,5 +420,51 @@ class OrdenCreada
     public function getMunicipio()
     {
         return $this->municipio;
+    }
+    
+    /**
+     * Set producto
+     *
+     * @param \Tienda\EcommerceBundle\Entity\Producto $producto
+     * @return OrdenCreada
+     */
+    public function setProducto(\Tienda\EcommerceBundle\Entity\Producto $producto = null)
+    {
+        $this->producto = $producto;
+
+        return $this;
+    }
+
+    /**
+     * Get producto
+     *
+     * @return \Tienda\EcommerceBundle\Entity\Producto 
+     */
+    public function getProducto()
+    {
+        return $this->producto;
+    }
+    
+    /**
+     * Set shipping
+     *
+     * @param \Tienda\EcommerceBundle\Entity\Producto $shipping
+     * @return OrdenCreada
+     */
+    public function setShipping(\Tienda\EcommerceBundle\Entity\Producto $shipping = null)
+    {
+        $this->shipping = $shipping;
+
+        return $this;
+    }
+
+    /**
+     * Get shipping
+     *
+     * @return \Tienda\EcommerceBundle\Entity\Shipping 
+     */
+    public function getShipping()
+    {
+        return $this->shipping;
     }
 }

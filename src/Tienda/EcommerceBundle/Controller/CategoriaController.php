@@ -3,6 +3,8 @@
 namespace Tienda\EcommerceBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,7 +14,7 @@ use Tienda\EcommerceBundle\Form\CategoriaType;
 /**
  * Categoria controller.
  *
- * @Route("/admin/categoria")
+ * @Route("/admin/categoria-producto")
  */
 class CategoriaController extends Controller
 {
@@ -24,12 +26,8 @@ class CategoriaController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $categorias = $em->getRepository('TiendaEcommerceBundle:Categoria')->findAll();
-
         return $this->render('categoria/index.html.twig', array(
-            'categorias' => $categorias,
+            //'categorias' => $categorias,
         ));
     }
 
@@ -57,6 +55,91 @@ class CategoriaController extends Controller
             'categorium' => $categorium,
             'form' => $form->createView(),
         ));
+    }
+    
+    /**
+     * Creates a new Categoria entity.
+     *
+     * @Route("/registro-categoria", name="admin_registro_categoria", options={"expose"=true})
+     * @Method({"GET", "POST"})
+     */
+    public function registroCategoriaAction(Request $request)
+    {
+        $isAjax = $this->get('Request')->isXMLhttpRequest();
+        if($isAjax){
+            try {
+                $em = $this->getDoctrine()->getManager();
+                
+                $parameters = $request->request->all();
+                $nombreCategoria = $parameters['name'];
+                $id = $parameters['id'];
+                
+                $sql = "SELECT upper(cat.nombre) FROM TiendaEcommerceBundle:Categoria cat "
+                        . "WHERE upper(cat.nombre) LIKE upper(:busqueda) AND cat.estado = 1";
+                
+                $objectDuplicate = $em->createQuery($sql)
+                                     ->setParameters(array('busqueda'=>"%".strtoupper($nombreCategoria)."%"))
+                                     ->getResult(); 
+                
+                if ($id!='') {
+                    $categoria = $em->getRepository('TiendaEcommerceBundle:Categoria')->find($id);
+                    $categoria->setNombre($nombreCategoria);
+
+                    $em->merge($categoria);
+                    $em->flush();
+
+                    $serverUpdate = $this->getParameter('app.serverMsgUpdate');
+                    $data['msg']=$serverUpdate; 
+                    $data['id']=$categoria->getId();
+                } else {
+                    if (!count($objectDuplicate)) {
+                        $categoria = new Categoria();
+                        $categoria->setNombre($nombreCategoria);
+                        $categoria->setEstado(1);
+
+                        $em->persist($categoria);
+                        $em->flush();
+                        
+                        $serverSave = $this->getParameter('app.serverMsgSave');
+                        $data['msg']=$serverSave;
+                        $data['id']=$categoria->getId();
+                    } else {
+                        $data['error'] = $this->getParameter('app.serverDuplicateName');                        
+                    }                                        
+                }
+                
+                $response = new JsonResponse();
+                $response->setData(array(
+                                  'msg'   => $data
+                               ));  
+            
+                return $response; 
+            } catch (Exception $e) {
+                if(method_exists($e,'getErrorCode')){
+                    switch (intval($e->getErrorCode())){
+                        case 2003: 
+                            $data['error'] = $this->getParameter('app.serverOffline');
+                        break;
+                        case 1062: 
+                            $data['error'] = $this->getParameter('app.serverDuplicateName');
+                        break;
+                        default :
+                            $data['error'] = $e->getMessage();                     
+                        break;
+                        }      
+                }
+                else{
+                    $data['error']=$e->getMessage();
+                }
+                    
+                $response = new JsonResponse();
+                $response->setData(array(
+                                  'msg'   => $data
+                               ));  
+            }                
+        } else {    
+            return new Response('0');              
+        }
     }
 
     /**
@@ -173,15 +256,15 @@ class CategoriaController extends Controller
         
         $busqueda['value'] = str_replace(' ', '%', $busqueda['value']);
         if($busqueda['value']!=''){                                
-            $dql = "SELECT CONCAT('<div style=\"text-align: left;\">', pri.nombre, '</div>') as name, "
+            $dql = "SELECT CONCAT('<div style=\"text-align: left;\">', cat.nombre, '</div>') as name, "
                     . "'<a ><i style=\"cursor:pointer;\"  class=\"infoOriginSource fa fa-info-circle\"></i></a>' as link, "
-                    . "CONCAT('<div id=\"',pri.id,'\" style=\"text-align:left\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as check, "
+                    . "CONCAT('<div id=\"',cat.id,'\" style=\"text-align:left\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as check, "
                     . "case "
-                    . "when pri.estado = 1 then 'Activo' "
+                    . "when cat.estado = 1 then 'Activo' "
                     . "else 'Inactivo' "
                     . "as state "
-                    . "FROM ERPCRMBundle:CtlPrioridad pri "
-                    . "WHERE pri.estado = 1 AND CONCAT(upper(pri.nombre), ' ' , upper(pri.estado)) LIKE upper(:busqueda) "
+                    . "FROM TiendaEcommerceBundle:Categoria cat "
+                    . "WHERE cat.estado = 1 AND CONCAT(upper(cat.nombre), ' ' , upper(cat.estado)) LIKE upper(:busqueda) "
                     . "ORDER BY ".$orderByText." ".$orderDir;
 
             $row['data'] = $em->createQuery($dql)
@@ -190,15 +273,15 @@ class CategoriaController extends Controller
 
             $row['recordsFiltered']= count($row['data']);
 
-            $dql = "SELECT CONCAT('<div style=\"text-align: left;\">', pri.nombre, '</div>') as name, "
+            $dql = "SELECT CONCAT('<div style=\"text-align: left;\">', cat.nombre, '</div>') as name, "
                     . "'<a ><i style=\"cursor:pointer;\"  class=\"infoOriginSource fa fa-info-circle\"></i></a>' as link, "
-                    . "CONCAT('<div id=\"',pri.id,'\" style=\"text-align:left\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as check, "
+                    . "CONCAT('<div id=\"',cat.id,'\" style=\"text-align:left\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as check, "
                     . "case "
-                    . "when pri.estado = 1 then 'Active' "
-                    . "else 'Inactive' "
+                    . "when cat.estado = 1 then 'Activo' "
+                    . "else 'Inactivo' "
                     . "as state "
-                    . "FROM ERPCRMBundle:CtlPrioridad pri "
-                    . "WHERE pri.estado = 1 AND CONCAT(upper(pri.nombre),' ', upper(pri.estado)) LIKE upper(:busqueda) "
+                    . "FROM TiendaEcommerceBundle:Categoria cat "
+                    . "WHERE cat.estado = 1 AND CONCAT(upper(cat.nombre),' ', upper(cat.estado)) LIKE upper(:busqueda) "
                     . "ORDER BY ".$orderByText." ".$orderDir;
 
             $row['data'] = $em->createQuery($dql)
@@ -208,15 +291,15 @@ class CategoriaController extends Controller
                     ->getResult();              
         }
         else{
-            $dql = "SELECT CONCAT('<div style=\"text-align: left;\">', pri.nombre, '</div>') as name, "
+            $dql = "SELECT CONCAT('<div style=\"text-align: left;\">', cat.nombre, '</div>') as name, "
                     . "'<a ><i style=\"cursor:pointer;\"  class=\"infoOriginSource fa fa-info-circle\"></i></a>' as link, "
-                    . "CONCAT('<div id=\"',pri.id,'\" style=\"text-align:left\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as check, "
+                    . "CONCAT('<div id=\"',cat.id,'\" style=\"text-align:left\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as check, "
                     . "case "
-                    . "when pri.estado = 1 then 'Active' "
-                    . "else 'Inactive' "
+                    . "when cat.estado = 1 then 'Activo' "
+                    . "else 'Inactivo' "
                     . "as state "
-                    . "FROM ERPCRMBundle:CtlPrioridad pri "
-                    . "WHERE pri.estado = 1 ORDER BY ".$orderByText." ".$orderDir;
+                    . "FROM TiendaEcommerceBundle:Categoria cat "
+                    . "WHERE cat.estado = 1 ORDER BY ".$orderByText." ".$orderDir;
             
             $row['data'] = $em->createQuery($dql)
                     ->setFirstResult($start)
@@ -225,5 +308,94 @@ class CategoriaController extends Controller
         }
         
         return new Response(json_encode($row));
+    }
+    
+    /**
+     * Recuperar las categorias
+     *
+     * @Route("/recuperar/categoria-solicitada", name="admin_recuperar_categorias", options={"expose"=true}))
+     * @Method("POST")
+     */
+    public function recuperarCategoriaAction(Request $request)
+    {
+        try {
+            $id=$request->get("id");
+            $response = new JsonResponse();
+            
+            $em = $this->getDoctrine()->getManager();
+            $categoria = $em->getRepository('TiendaEcommerceBundle:Categoria')->find($id);
+            if(count($categoria)){
+                
+                $data['name']=$categoria->getNombre();
+                $data['id']=$categoria->getId();
+            }
+            else{
+                $data['error']="Error";
+            }
+                        
+            $response->setData($data); 
+            
+        } catch (\Exception $e) {
+            switch (intval($e->getErrorCode()))
+                    {
+                        case 2003: 
+                            $data['error'] = $this->getParameter('app.serverOffline');
+                        break;
+                        default :
+                            $data['error'] = $e->getMessage();                     
+                        break;
+                    }      
+            $response->setData($data);
+        }
+        
+        return $response;
+        
+    }
+    
+    /**
+     * Eliinar categorias de producto seleccionadas
+     *
+     * @Route("/priority/delete", name="admin_eliminar_categorias",  options={"expose"=true}))
+     * @Method("POST")
+     */
+    public function deletePriorityAction(Request $request)
+    {
+        try {
+            $ids=$request->get("param1");
+            $response = new JsonResponse();
+            
+            $em = $this->getDoctrine()->getManager();
+            foreach ($ids as $key => $id) {
+                $object = $em->getRepository('TiendaEcommerceBundle:Categoria')->find($id);    
+                if(count($object)){
+                    $object->setEstado(0);
+                    $em->merge($object);
+                    $em->flush();    
+                    
+                    $serverDelete = $this->getParameter('app.serverMsgDelete');
+                    $data['msg']=$serverDelete;
+                }
+                else{
+                    $data['error']="Error";
+                }
+            }
+            $response->setData($data); 
+        } catch (\Exception $e) {
+            $response = new JsonResponse();
+            
+            switch (intval($e->getErrorCode()))
+                    {
+                        case 2003: 
+                            $data['error'] = $this->getParameter('app.serverOffline');
+                        break;
+                        default :
+                            $data['error'] = $e->getMessage();                     
+                        break;
+                    }      
+            $data['error']=$e->getMessage();
+            $response->setData($data);
+        }
+        
+        return $response;        
     }
 }

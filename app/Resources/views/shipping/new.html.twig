@@ -1,0 +1,39 @@
+ <div class="col-md-12 col-xs-12">
+    <div id="pnAdd" class="panel panel-default" style="display:none;">
+        <div class="panel-heading"><div class="hidden pnHeadingLabelAdd">Registro de shipping</div><div class="hidden pnHeadingLabelEdit">Editar</div></div>
+        <div class="panel-body">
+            <div style="color:red; height: 25px; font-size: 13px; margin-left: 15px; margin-top: 7px;">
+                <div class="col-md-6" id="error" style="display: none;">
+                    <p>El valor ingresado debe ser un número válido</p>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-4 col-xs-12">
+                <label>Departamento</label>
+                <label style="width:100%; color: #848484" class="deptoLabel hidden"></label>
+                <div class="departamento">
+                    <select style="width:100%;" id = "departamento" name="departamento" class="input-sm form-control validateSelect">
+                        {% for departamento in departamentos %}
+                            <option value={{departamento.id}}>{{departamento.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <label>Valor</label>
+                <label class="hidden requiredFields">¡Campos en rojo, son requeridos!</label>
+                <input id="txtId" type="hidden" name="" class="input-sm form-control">
+                
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                    <input id="txtValor"type="text" name="" class="input-sm form-control validateInput">
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-6 pull-right text-right" style="margin-top:20px;">
+                <button id="btnCancel" class="btn btn-sm btn-default">Cancelar</button>
+                <button id="btnSave" class="btn btn-sm btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

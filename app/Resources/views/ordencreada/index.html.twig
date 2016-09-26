@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>OrdenCreada list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Cookie</th>
+                <th>Nombreprod</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Direccion</th>
+                <th>Numeroreferencia</th>
+                <th>Imagen</th>
+                <th>Estado</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ordenCreada in ordenCreadas %}
+            <tr>
+                <td><a href="{{ path('admin_orden_show', { 'id': ordenCreada.id }) }}">{{ ordenCreada.id }}</a></td>
+                <td>{{ ordenCreada.cookie }}</td>
+                <td>{{ ordenCreada.nombreProd }}</td>
+                <td>{{ ordenCreada.precio }}</td>
+                <td>{{ ordenCreada.cantidad }}</td>
+                <td>{{ ordenCreada.direccion }}</td>
+                <td>{{ ordenCreada.numeroReferencia }}</td>
+                <td>{{ ordenCreada.imagen }}</td>
+                <td>{{ ordenCreada.estado }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('admin_orden_show', { 'id': ordenCreada.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('admin_orden_edit', { 'id': ordenCreada.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('admin_orden_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

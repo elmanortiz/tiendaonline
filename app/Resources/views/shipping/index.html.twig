@@ -1,0 +1,97 @@
+{% extends ':layout:layouterp.html.twig' %}
+
+{% block title -%}<title> ARIASTORE | Gestión de shipping </title>{% endblock %}
+
+{% block customcss %}
+    <link rel="stylesheet" href="{{ asset('Resources/customscss/salestage.css') }}">
+    <link rel="stylesheet" href="{{ asset('Resources/slider/css/bootstrap-slider.min.css') }}">
+{% endblock %}
+{% block descripcion %}
+     <div class="col-md-6">
+          <p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Gestión de shipping</p>
+          <p class="robo" style="font-weight: 300; font-size: 14px; ">Establecer el valor del shipping.</p>
+     </div>
+
+{% endblock %}
+{% block acciones %}
+     <div class="col-md-6 text-right panel-body">
+          <button data-loading-text="Loading..." autocomplete="off" class="btAdd btn btn-sm btn-primary btn-flat">Registrar</button>
+          <button class="hidden btDelete btn btn-sm btn-danger btn-flat">Eliminar</button>
+          <button class="hidden btnShow btn btn-sm btn-success btn-flat">Mostrar</button>
+          <button class="hidden btnAction btn btn-sm btn-default btn-flat">Acciones</button>
+     </div>
+{% endblock acciones %}
+
+{% block navegacion %}
+    <a href="{{ path('admin_categoria_index') }}" class="leftnava"><li class="leftnav left ">Categorias<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_gestiontalla_index') }}" class="leftnava"><li class="leftnav left ">Tallas<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_color_index') }}" class="leftnava"><li class="leftnav left ">Colores<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_gestionshipping_index') }}" class="leftnava"><li class="leftnav left active">Shipping<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
+    <a href="{{ path('admin_cambio_password', { 'id': app.user.id }) }}" class="leftnava"><li class="leftnav left ">Cambio contraseña<span class="pull-right right"><i class=""></i></span></li></a>
+{% endblock %}
+
+{% block contenido %}
+    {% include ':shipping:new.html.twig' %}
+    
+    <div class="clearfix"></div>
+    <div class="col-md-12 col-xs-12">
+        <table id="listadoShipping" class="mdl-data-table dataTable" width="100%" cellspacing="0" style="text-align:left;">
+            <thead>
+                <tr role="row">
+                    {#<th style="width: 20px; padding-left: 8px;"><input type="checkbox" name="checktodos" onclick = "seleccionarTodo();"></th> #}
+                    <th style="text-align: center">Departamento</th>
+                    <th style="text-align: center">Valor shipping ($)</th>
+                </tr>
+            </thead>
+        </table>
+    </div>   
+{% endblock %}
+
+{% block js_extend %}
+    <script type="text/javascript" src="{{ asset('Resources/jquery/jquery.numeric.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('Resources/validations/validation.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('Resources/persist/shipping/shipping.js') }}"></script> 
+    <script type="text/javascript" src="{{ asset('Resources/animations/funciones.js') }}"></script> 
+    <script type="text/javascript" src="{{ asset('Resources/animations/shipping/shipping.js') }}"></script> 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#departamento').select2();
+            $('#txtValor').numeric('.'); 
+            
+            /////Definición datatable
+            var table = $('#listadoShipping').DataTable({
+                dom:'ftp',
+                "processing": false,
+                "serverSide": true,
+                "ajax": {
+                        "url": Routing.generate('admin_gestionshipping_data'),
+                        "type": 'GET'
+                },
+                "columns": [
+                        //{ "data": "check" },
+                        { "data": "depto" },
+                        { "data": "valor" }
+                ],
+                "order":[0,'asc'],
+                {#"order":[1,'asc'],#}
+                {#"columnDefs": [
+                        { "orderable": false, "targets":  }
+                ],#}
+                "language": {
+                        "info": "{{dtInfo}} _PAGE_ de _PAGES_",
+                        "infoEmpty": "{{dtInfoEmpty}}",
+                        "zeroRecords": "{{dtZeroRecords}}",
+                        "emptyTable": "{{dtEmptyTable}}",
+                        "paginate": { 
+                            "next": "{{dtNext}}",
+                            "previous": "{{dtPrev}}"
+                        },
+                        "processing": "{{dtProcessing}}",
+                        "search": "{{dtSearch}}",
+                        "lengthMenu": "{{dtLengthMenu}} _MENU_ registros"
+                    }
+            });
+            /////Fin definición datatable 
+        });
+    </script>
+{% endblock %}

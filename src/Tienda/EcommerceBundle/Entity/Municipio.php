@@ -95,4 +95,8 @@ class Municipio
     {
         return $this->departamento;
     }
+    
+    public function __toString() {
+        return $this->nombre ? $this->nombre : '';
+    } 
 }

@@ -1,5 +1,6 @@
 imports:
     - { resource: parameters.yml }
+    - { resource: parametros.yml }
     - { resource: security.yml }
     - { resource: services.yml }
 
@@ -34,6 +35,103 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+
+#Parametros para cambiar apariencia de la plataforma    
+    globals:
+        urlParam: '%app.urlParam%'
+        pais: '%app.pais%'
+        nombre: '%app.nombre%'
+        tituloHome: '%app.tituloHome%'
+
+        #serverMesages 
+        serverOffline: '%app.serverOffline%'
+        serverDuplicateName: '%app.serverDuplicateName%'
+        serverDuplicateDepto: '%app.serverDuplicateDepto%'
+        serverMsgSave: '%app.serverMsgSave%'
+        serverMsgUpdate: '%app.serverMsgUpdate%'
+        serverMsgCancel: '%app.serverMsgCancel%'
+        serverCancel: '%app.serverCancel%'
+        serverMsgDelete: '%app.serverMsgDelete%'
+        serverError: '%app.serverError%'
+    
+    #loginMessages 
+        usernameInvalidate: '%app.usernameInvalidate%'
+        checkCaptcha: '%app.checkCaptcha%'
+        invalidCaptcha: '%app.invalidCaptcha%'
+        
+    #Form Validations        
+        #requiredFields 
+        requiredFields: '%app.requiredFields%'        
+        
+        #cancelLabel 
+        cancelLabel: '%app.cancelLabel%'
+        
+        #removeLabel 
+        removeLabel: '%app.removeLabel%'
+        
+        #cancelButtonText 
+        cancelButtonText: '%app.cancelButtonText%'
+        
+        #confirmButtonText 
+        confirmButtonText: '%app.confirmButtonText%'
+        
+        #alternateconfirmButtonText 
+        alternateconfirmButtonText: '%app.alternateconfirmButtonText%'
+        
+        #imageError 
+        imageError: '%app.imageError%'
+        
+        #requiredFields 
+        select2Label: '%app.select2Label%'
+        
+        # Opciones de usuario 
+        editPass: '%app.editPass%'
+        showLog: '%app.showLog%'
+        settings: '%app.settings%'
+        logOut: '%app.logOut%'
+        
+        #datatables 
+        dtInfo: '%app.dtInfo%'
+        dtInfoEmpty: '%app.dtInfoEmpty%'
+        dtEmptyTable: '%app.dtEmptyTable%'
+        dtNext: '%app.dtNext%'
+        dtPrev: '%app.dtPrev%'
+        dtProcessing: '%app.dtProcessing%'
+        dtSearch: '%app.dtSearch%'
+        dtLengthMenu: '%app.dtLengthMenu%'
+        dtZeroRecords: '%app.dtZeroRecords%'
+        
+        #Botones 
+        add: '%app.add%'
+        delete: '%app.delete%'
+        back: '%app.back%'
+        show: '%app.show%'
+        action: '%app.action%'
+        save: '%app.save%'
+        cancel: '%app.cancel%'
+        
+        #Tooltips 
+        accountsTooltip: '%app.accountsTooltip%'
+        saleStagesTooltip: '%app.saleStagesTooltip%'
+        activitiesTooltip: '%app.activitiesTooltip%'
+        calendarTooltip: '%app.calendarTooltip%'
+        settingsTooltip: '%app.settingsTooltip%'
+        reportsTooltip: '%app.reportsTooltip%'
+        
+        #icons 
+        accountsIcon: '%app.accountsIcon%'
+        saleStagesIcon: '%app.saleStagesIcon%'
+        activitiesIcon: '%app.activitiesIcon%'
+        calendarIcon: '%app.calendarIcon%'
+        
+        #Encabezados panel 
+        pnHeadingLabelAdd: '%app.pnHeadingLabelAdd%'
+        pnHeadingLabelEdit: '%app.pnHeadingLabelEdit%'
+        
+        #Login 
+        tituloLogin: '%app.tituloLogin%'        
+        usernameTxt: '%app.usernameTxt%'        
+        passwordTxt: '%app.passwordTxt%' 
 
 # Doctrine Configuration
 doctrine:

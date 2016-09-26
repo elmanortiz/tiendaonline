@@ -3,6 +3,8 @@
 namespace Tienda\EcommerceBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -75,6 +77,20 @@ class CtlUsuarioController extends Controller
         return $this->render('ctlusuario/show.html.twig', array(
             'ctlUsuario' => $ctlUsuario,
             'delete_form' => $deleteForm->createView(),
+        ));
+    }
+    
+    /**
+     * Formulario para cambiar contraseña
+     *
+     * @Route("/{id}/cambio-password", name="admin_cambio_password")
+     * @Method("GET")
+     */
+    public function cambioPasswordAction(CtlUsuario $ctlUsuario)
+    {
+    
+        return $this->render('ctlusuario/cambioPassword.html.twig', array(
+            'ctlUsuario' => $ctlUsuario,
         ));
     }
 
@@ -160,5 +176,79 @@ class CtlUsuarioController extends Controller
         $encoder = new \Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder('sha512', true, 10);
         $password = $encoder->encodePassword($entity->getPassword(), $entity->getSalt());
         $entity->setPassword($password);
+    }
+    
+    private function evaluatePassword(&$entity, $contrasenia) {
+        $entity->setSalt(md5(time()));
+        $encoder = new \Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder('sha512', true, 10);
+        $password = $encoder->encodePassword($contrasenia, $entity->getSalt());
+        $entity->setPassword($password);
+    }
+    
+    /**
+     * Actualizacion de nueva contraseña para el usuario
+     * 
+     * @Route("/cambiar-passw/", name="admin_cambio_passw", options={"expose"=true})
+     * @Method("POST")
+     */
+    public function CambiarPassw(Request $request) {
+
+        $isAjax = $this->get('Request')->isXMLhttpRequest();
+
+        if ($isAjax) {
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $passwActual = $request->get('passwActual');
+                $passwNva = $request->get('passwNva');
+
+                $usuario = $this->container->get('security.context')->getToken()->getUser();
+                $salt = $usuario->getSalt();
+    //            $current_pass = $usuario->getPassword();
+                $encoder = new \Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder('sha512', true, 10);
+                $password = $encoder->encodePassword($passwActual, $salt);
+
+                $entity = $em->getRepository('TiendaEcommerceBundle:CtlUsuario')->findBy(array('password'=>$password));
+
+                if(count($entity)==1){
+                    $this->evaluatePassword($usuario, $passwNva);
+                    $em->merge($usuario);
+                    $em->flush();
+
+                    $serverUpdate = $this->getParameter('app.serverMsgPasswUpdate');
+                    $data['msg']=$serverUpdate; 
+                }
+                else{
+                    $data['error'] = $this->getParameter('app.serverPasswIncorrecto');   
+                }
+
+                $response = new JsonResponse();
+                $response->setData(array(
+                                  'msg'   => $data
+                               )); 
+
+                return $response;     
+            } catch (Exception $e) {
+                if(method_exists($e,'getErrorCode')){
+                    switch (intval($e->getErrorCode())){
+                        case 2003: 
+                            $data['error'] = $this->getParameter('app.serverOffline');
+                        break;
+                        default :
+                            $data['error'] = $e->getMessage();                     
+                        break;
+                        }      
+                }
+                else{
+                    $data['error']=$e->getMessage();
+                }
+                    
+                $response = new JsonResponse();
+                $response->setData(array(
+                                  'msg'   => $data
+                               ));  
+            }   
+        } else {    
+            return new Response('0');              
+        }
     }
 }

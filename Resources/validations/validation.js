@@ -16,6 +16,20 @@
 			return true;///Valor valido
 		}
 	}
+        
+        /////Funcion que verifica que los campos no esten vacios y acepta el "0" como valor válido
+	function valorRequired(object){
+		///El valor '' es para input que requieran que se ingrese texto, el valor 0 puede ser para selects2 (dropdowns)
+		var valor = object.val();
+		if (valor=='') {
+
+          	         object.addClass('errorform');
+			return false;///Valor vacio (invalido)
+		} 
+		else {
+			return true;///Valor valido
+		}
+	}
 
 	function isAlphaOrParen(str) {
   		return /^[a-zA-Z() ]+$/.test(str);

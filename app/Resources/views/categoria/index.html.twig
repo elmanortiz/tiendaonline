@@ -7,22 +7,30 @@
     <link rel="stylesheet" href="{{ asset('Resources/slider/css/bootstrap-slider.min.css') }}">
 {% endblock %}
 {% block descripcion %}
-     <div class="col-md-5">
-          <p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Gestión de productos</p>
-          <p class="robo" style="font-weight: 300; font-size: 14px; ">Agregar, ediProductos</p>
+     <div class="col-md-6">
+          <p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Gestión de categorias de producto</p>
+          <p class="robo" style="font-weight: 300; font-size: 14px; ">Registrar, actualizar y eliminar categorias de productos</p>
      </div>
 
 {% endblock %}
 {% block acciones %}
-     <div class="col-md-7 text-right panel-body">
-          <button data-loading-text="Loading..." autocomplete="off" class="btnAdd btn btn-sm btn-primary btn-flat">add</button>
-          <button class="hidden btnDelete btn btn-sm btn-danger btn-flat">delete</button>
-          <button class="hidden btnShow btn btn-sm btn-success btn-flat">show</button>
-          <button class="hidden btnAction btn btn-sm btn-default btn-flat">action</button>
+     <div class="col-md-6 text-right panel-body">
+          <button data-loading-text="Loading..." autocomplete="off" class="btAdd btn btn-sm btn-primary btn-flat">Registrar</button>
+          <button class="hidden btDelete btn btn-sm btn-danger btn-flat">Eliminar</button>
+          <button class="hidden btnShow btn btn-sm btn-success btn-flat">Mostrar</button>
+          <button class="hidden btnAction btn btn-sm btn-default btn-flat">Acciones</button>
      </div>
 {% endblock acciones %}
 
-{% block body %}
+{% block navegacion %}
+    <a href="{{ path('admin_categoria_index') }}" class="leftnava"><li class="leftnav left active">Categorias<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
+    <a href="{{ path('admin_gestiontalla_index') }}" class="leftnava"><li class="leftnav left ">Tallas<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_color_index') }}" class="leftnava"><li class="leftnav left ">Colores<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_gestionshipping_index') }}" class="leftnava"><li class="leftnav left ">Shipping<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_cambio_password', { 'id': app.user.id }) }}" class="leftnava"><li class="leftnav left ">Cambio contraseña<span class="pull-right right"><i class=""></i></span></li></a>
+{% endblock %}
+
+{% block contenido %}
     {% include ':categoria:new.html.twig' %}
     
     <div class="clearfix"></div>
@@ -52,7 +60,7 @@
                 "processing": false,
                 "serverSide": true,
                 "ajax": {
-                        "url": Routing.generate('admin_priorities_data'),
+                        "url": Routing.generate('admin_categoria_data'),
                         "type": 'GET'
                 },
                 "columns": [
@@ -62,8 +70,7 @@
                 "order":[1,'asc'],
                 "columnDefs": [
                         { "orderable": false, "targets": 0 }
-                ]
-                {#,
+                ],
                 "language": {
                         "info": "{{dtInfo}} _PAGE_ de _PAGES_",
                         "infoEmpty": "{{dtInfoEmpty}}",
@@ -76,7 +83,7 @@
                         "processing": "{{dtProcessing}}",
                         "search": "{{dtSearch}}",
                         "lengthMenu": "{{dtLengthMenu}} _MENU_ registros"
-                    }#}
+                    }
             });
             /////Fin definición datatable 
         });

@@ -37,6 +37,13 @@ class Shipping
      * })
      */
     private $departamento;
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="estado", type="boolean", nullable=false)
+     */
+    private $estado;
 
 
 
@@ -95,4 +102,31 @@ class Shipping
     {
         return $this->departamento;
     }
+    
+    /**
+     * Set estado
+     *
+     * @param boolean $estado
+     * @return Shipping
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return boolean 
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+    
+    public function __toString() {
+        return $this->nombre ? $this->nombre : '';
+    } 
 }

@@ -1,0 +1,97 @@
+# This file is auto-generated during the composer install
+parameters:
+    #labels
+        app.pais: 
+        app.nombre: 
+        app.urlParam: 
+        app.protocolo: 
+    #Titulos página
+        #backend
+
+        #serverMesages
+        app.serverOffline: Servidor desconectado
+        app.serverDuplicateName: Valor duplicado
+        app.serverDuplicateDepto: El shipping del departamento ya ha sido registrado
+        app.serverMsgSave: ¡Guardado!
+        app.servermsgupdate: ¡Actualizado!
+        app.serverMsgDelete: ¡Eliminado!
+        app.serverMsgCancel: ¡Cancelado!
+        app.serverCancel: ¡Ya cancelado!
+        app.serverError: ¡Error!
+        app.serverMsgPasswUpdate: La contraseña se ha actualizado con exito
+        app.serverPasswIncorrecto: Contraseña actual incorrecta
+        
+        #loginMessages
+        app.usernameInvalidate: Lo sentimos, su nombre de usuario no se encuentra registrado.
+        app.checkCaptcha: Por favor, compruebe mediante captcha.
+        app.invalidCaptcha: Captcha invalido.
+        
+        #frontend
+
+        #form validations
+        #requiredFields
+        app.requiredFields: ¡Campos en rojo, son requeridos!
+        #remove Labels
+        app.removeLabel: ¿Desea eliminar las filas seleccionadas?
+        #cancel Labels
+        app.cancelLabel: ¿Desea cancelar las tareas seleccionadas?
+        #cancelButtonText
+        app.cancelButtonText: Cancelar
+        #confirmButtonText
+        app.confirmButtonText: Eliminar
+        #alternateconfirmButtonText
+        app.alternateconfirmButtonText: Continuar
+        #imageError
+        app.imageError: ¡La imagen es demasiado grande!
+        #select2
+        app.select2Label: Buscar... (Ctrl+g)
+        
+        app.editPass: Editar contraseña
+        app.showLog: Mostrar registro
+        app.settings: Ajustes
+        app.logOut: Cerrar sesión
+
+        #datatables
+        app.dtInfo: Mostrando página
+        app.dtInfoEmpty: 
+        app.dtZeroRecords: Datos no encontrados 
+        app.dtEmptyTable: Datos no encontrados
+        app.dtNext: Próximo
+        app.dtPrev: Previo
+        app.dtProcessing: Procesando...
+        app.dtSearch: Buscar:
+        app.dtLengthMenu: Mostrar
+
+        #botones
+        app.add: Agregar
+        app.back: Regresar
+        app.delete: Elminar
+        app.show: Mostrar
+        app.action: Acción
+        app.save: Guardar
+        app.cancel: Cancelar
+        app.pnHeadingLabelAdd: Agregar
+        app.pnHeadingLabelEdit: Editar
+
+        #Tooltips
+        app.accountsTooltip: CRM
+        app.saleStagesTooltip: Ventas
+        app.activitiesTooltip: Actividades
+        app.calendarTooltip: Calendario
+        app.settingsTooltip: Ajustes
+        app.reportsTooltip: Reportes
+        
+        #icons
+        app.accountsIcon: 1.png
+        app.saleStagesIcon: 2.png
+        app.activitiesIcon: 3.png
+        app.calendarIcon: 4.png
+                
+        #tituloPrincipal
+        app.tituloHome:  ARIASTORE 
+        
+        #Login
+        app.tituloLogin: Sistema CRM | Inicio de sesión
+        app.usernameTxt: Nombre de usuario
+        app.passwordTxt: Contraseña                       
+        

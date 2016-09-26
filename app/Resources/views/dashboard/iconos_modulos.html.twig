@@ -1,9 +1,9 @@
 <div class="row">
     <!-- Inicio de Icono de Productos -->
     <div class="col-md-2 col-xs-6 col-sm-2" style="margin-top: 20px;">
-        <a class="opcion" href="" style="text-decoration: none; color: inherit; outline: 0; margin-top: 20px;">
+        <a class="opcion" href="{{ path('admin_producto_index') }}" style="text-decoration: none; color: inherit; outline: 0; margin-top: 20px;">
             <span class="text-center">
-                <p style="margin-botttom: 0px; padding-bottom: 0px;"><img src="{{asset('Resources/src/img/icons/6.png')}}" style="width:60%;"></p>
+                <p style="margin-botttom: 0px; padding-bottom: 0px;"><img src="{{asset('Resources/src/img/icons/prodcutos.png')}}" style="width:60%;"></p>
                 <p style="padding-top: 5px; margin-top: 0px;" ><strong>Productos</strong></p>
             </span>
         </a>
@@ -11,15 +11,15 @@
 
     <!-- Inicio de Icono de Historial pedidos -->
     <div class="col-md-2 col-xs-6 col-sm-2" style="margin-top: 20px;">
-        <a class="opcion" href="" style="text-decoration: none; color: inherit; outline: 0; margin-top: 20px;">
+        <a class="opcion" href="{{ path('admin_historial_pedidos') }}" style="text-decoration: none; color: inherit; outline: 0; margin-top: 20px;">
             <span class="text-center">
-                <p style="margin-botttom: 0px; padding-bottom: 0px;"><img src="{{asset('Resources/src/img/icons/7.png')}}" style="width:60%;"></p>
-                <p style="padding-top: 5px; margin-top: 0px;" ><strong>Historial de Pedidos</strong></p>
+                <p style="margin-botttom: 0px; padding-bottom: 0px;"><img src="{{asset('Resources/src/img/icons/pedidos.png')}}" style="width:60%;"></p>
+                <p style="padding-top: 5px; margin-top: 0px;" ><strong>Pedidos</strong></p>
             </span>
         </a>
     </div>
                 
-    <!-- Inicio de Icono de Talla -->
+    {#<!-- Inicio de Icono de Talla -->
     <div class="col-md-2 col-xs-6 col-sm-2" style="margin-top: 20px;">
         <a class="opcion" href="" style="text-decoration: none; color: inherit; outline: 0; margin-top: 20px;">
             <span class="text-center">
@@ -37,14 +37,14 @@
                 <p style="padding-top: 5px; margin-top: 0px;" ><strong>Colores</strong></p>
             </span>
         </a>
-    </div>
+    </div>#}
                 
     <!-- Inicio de Icono de Categoria -->
     <div class="col-md-2 col-xs-6 col-sm-2" style="margin-top: 20px;">
-        <a class="opcion" href="" style="text-decoration: none; color: inherit; outline: 0; margin-top: 20px;">
+        <a class="opcion" href="{{ path('admin_categoria_index') }}" style="text-decoration: none; color: inherit; outline: 0; margin-top: 20px;">
             <span class="text-center">
-                <p style="margin-botttom: 0px; padding-bottom: 0px;"><img src="{{asset('Resources/src/img/icons/1.png')}}" style="width:60%;"></p>
-                <p style="padding-top: 5px; margin-top: 0px;" ><strong>Categorias</strong></p>
+                <p style="margin-botttom: 0px; padding-bottom: 0px;"><img src="{{asset('Resources/src/img/icons/ajustes.png')}}" style="width:60%;"></p>
+                <p style="padding-top: 5px; margin-top: 0px;" ><strong>Ajustes</strong></p>
             </span>
         </a>
     </div>
@@ -53,7 +53,7 @@
     <div class="col-md-2 col-xs-6 col-sm-2" style="margin-top: 20px;">
         <a class="opcion" href="" style="text-decoration: none; color: inherit; outline: 0; margin-top: 20px;">
             <span class="text-center">
-                <p style="margin-botttom: 0px; padding-bottom: 0px;"><img src="{{asset('Resources/src/img/icons/2.png')}}" style="width:60%;"></p>
+                <p style="margin-botttom: 0px; padding-bottom: 0px;"><img src="{{asset('Resources/src/img/icons/reportes.png')}}" style="width:60%;"></p>
                 <p style="padding-top: 5px; margin-top: 0px;" ><strong>Reportes</strong></p>
             </span>
         </a>

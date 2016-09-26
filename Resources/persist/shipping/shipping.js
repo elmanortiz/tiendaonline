@@ -2,33 +2,36 @@ $(document).ready(function() {
     $("input[name=checktodos]").prop({'checked': false});
     
     $(document).on('click', '#btnCancel', function(event) {
-        $('.btAdd').click();
+//        $('.btAdd').click();
+        $('#pnAdd').slideToggle();
     });
     
     $(document).on('click', '#btnSave', function(event) {
         var btn = $(this).button('loading');
         var id=$('#txtId');
-        var name=$('#txtName');
-        var table = $('#PriorityList').DataTable();
+        var valor=$('#txtValor');
+        var depto=$('#departamento');
+        var table = $('#listadoShipping').DataTable();
         var errores = 0; //Contador de errores, para antes de la persistencia
 
         $('.validateInput').each(function() {
             console.log($(this).val());
             
-            if (!required($(this))) {
+            if (!valorRequired($(this))) {
                 errores++;
             }
         });
 
         if (errores==0) {
             var data = {
-                            id: id.val(),
-                            name : name.val()
-                        };
+                        id: id.val(),
+                        valor : valor.val(),
+                        depto : depto.val()
+                    };
 
             $.ajax({
                 data: data,
-                url: Routing.generate('admin_register_priority'),
+                url: Routing.generate('admin_registro_shipping'),
                 type: 'POST',
                 dataType: 'json',
                 success: function (response)
@@ -38,7 +41,7 @@ $(document).ready(function() {
                     if(!response.msg.error){
                         swal('', response.msg.msg,'success');
                         $('#txtId').val('');
-                        $('#txtName').val('');
+                        $('#txtValor').val('');
                         btn.button('reset');
                         table.ajax.reload();
                         $('.btAdd').click();
@@ -60,14 +63,14 @@ $(document).ready(function() {
             return false;        
         }
         else {
-            swal('','Fields in red are required!','error');
+            swal('','¡Campos en rojo, son requeridos!','error');
             btn.button('reset');
         }                
        
     });     
     
     /////Persist datatable (Edit method)
-    $(document).on('click', '#PriorityList>tbody>tr>td:nth-child(2)', function(event) {
+    $(document).on('click', '#listadoShipping>tbody>tr>td:nth-child(1), #listadoShipping>tbody>tr>td:nth-child(2)', function(event) {
         /////Definición de variables
         var text = $(this).prop('tagName');
         var id=$(this).parent().children().first().children().attr('id');
@@ -79,7 +82,7 @@ $(document).ready(function() {
         
         if (text=='TD' && id!=idForm) {
             $.ajax({
-                url: Routing.generate('admin_retrieve_priority'),
+                url: Routing.generate('admin_recuperar_shipping'),
                 type: 'POST',
                 data: {id: id},
                 success:function(data){
@@ -89,7 +92,12 @@ $(document).ready(function() {
                     }
                     else{
                         $('#txtId').val(data.id);
-                        $('#txtName').val(data.name);
+                        $('#txtValor').val(data.valor);
+                        $('.deptoLabel').html(data.depto);
+                        
+                        $('.deptoLabel').removeClass('hidden');
+                        $('.departamento').addClass('hidden');
+                        
                         $('#pnAdd').slideDown();
                     }					
 
@@ -149,19 +157,19 @@ $(document).ready(function() {
         var btn = $(this).button('loading');
         
         swal({
-            text: "Really remove priority?",
+            text: "¿Desea realmente eliminar los registros seleccionados?",
             type: "info",
             showCancelButton: true,
             confirmButtonColor: "#1D234D",
-            confirmButtonText: "Acept",
-            cancelButtonText: "Cancel"
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
         }).then(function(isConfirm) {
             if (isConfirm) {
                 console.log('if');
                 /////Definición de variables
                 var id=$(this).children().first().children().attr('id');
                 var ids=[];
-                var table = $('#PriorityList').DataTable();
+                var table = $('#listadoShipping').DataTable();
                 $('.chkItem').each(function() {
                     if ($(this).is(':checked')) {
                         ids.push($(this).parent().attr('id'));
@@ -169,7 +177,7 @@ $(document).ready(function() {
                 });	
                 
                 $.ajax({
-                    url: Routing.generate('admin_delete_priority'),
+                    url: Routing.generate(''),
                     type: 'POST',
                     data: {param1: ids},
                     success:function(data){
@@ -180,6 +188,9 @@ $(document).ready(function() {
                             $('#txtId').val(data.id);
                             $('#txtName').val(data.name);
                             $("input[name=checktodos]").prop({'checked': false});
+                            
+                            $('.btAdd').removeClass('hidden');
+                            $('.btDelete').addClass('hidden');
                             
                             swal('', data.msg,'success');
                             btn.button('reset');
@@ -204,4 +215,17 @@ $(document).ready(function() {
         });
     });
     /////Fin definición persist data (Delete method)
+    
+    $(document).on("input", "#txtValor", function(){
+        var valor = $(this).val();
+        var error = document.getElementById('error');
+
+        if(valor < 0){
+            error.style.display = 'block';
+            $('#btnSave').hide();
+        } else {
+            error.style.display = 'none';
+            $('#btnSave').show();
+        }
+    });
 });
