@@ -27,7 +27,13 @@ class Color
      * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     private $nombre;
-
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="estado", type="boolean", nullable=false)
+     */
+    private $estado;
 
 
     /**
@@ -62,4 +68,31 @@ class Color
     {
         return $this->nombre;
     }
+    
+    /**
+     * Set estado
+     *
+     * @param boolean $estado
+     * @return Color
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return boolean 
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+    
+    public function __toString() {
+        return $this->nombre ? $this->nombre : '';
+    } 
 }
