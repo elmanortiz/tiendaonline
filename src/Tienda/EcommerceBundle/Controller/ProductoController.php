@@ -230,7 +230,10 @@ class ProductoController extends Controller
     {
         $parameters = $request->request->all();
         $em = $this->getDoctrine()->getManager();
-
+        //var_dump($parameters['precioanterior']);
+        //die();
+        
+        
         $producto = new Producto();        
         $atributoproducto = new Atributoproducto();
         $fotoproducto = new Imagenproducto(); 
@@ -238,6 +241,7 @@ class ProductoController extends Controller
         $tallaproducto = new TallaProducto();
         
         $producto->setNombre($parameters['nombreprod']);
+        $producto->setPrecioAnterior($parameters['precioanterior']);
         $producto->setPrecio($parameters['precio']);
         $producto->setNumeroReferencia($parameters['codigo']);
         $producto->setEstado(1);
