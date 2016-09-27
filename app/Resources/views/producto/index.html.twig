@@ -6,7 +6,7 @@
 {% block descripcion %}
     <div class="col-md-5">
         <p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Gestión de productos</p>
-        <p class="robo" style="font-weight: 300; font-size: 14px; ">Agregar, modificar or eliminar Productos.</p>
+        <p class="robo" style="font-weight: 300; font-size: 14px; ">Agregar, modificar or eliminar productos.</p>
     </div>
 
 {% endblock %}
@@ -20,8 +20,7 @@
 {% endblock acciones %}
 
 {% block navegacion %}
-    <a href="/sepes/app_dev.php/admin/reporte/pacientes/reporte" class="leftnava"><li class="leftnav left ">Users management<span class="pull-right right"><i class=""></i></span></li></a>
-    <a href="/sepes/app_dev.php/admin/reporte/ingresoemergencia" class="leftnava"><li class="leftnav left active"> management<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
+    <a href="{{ path('admin_producto_index') }}" class="leftnava"><li class="leftnav left active">Gestión productos<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
 {% endblock %}
 
 {% block contenido %}
@@ -52,9 +51,8 @@
                                                         {#<th style="width: 20px; text-align: center;">Id</th>#}
                                                         <th style="text-align: center;">Nombre</th>
                                                         <th style="text-align: center;">Categoria</th>
-                                                        <th style="text-align: center;">Precio</th>
                                                         <th style="text-align: center;">Stock</th>
-                                                        
+                                                        <th style="text-align: center;">Precio ($)</th>
                                                         {#<th>Probability</th>
                                                         <th>State</th>#}
                                                         {#<th>Actions</th>#}
@@ -89,8 +87,8 @@
                             { "data": "chk" },
                             { "data": "name" },
                             { "data": "categoria" },
-                            { "data": "precio" },
-                            { "data": "stock" }
+                            { "data": "stock" }, 
+                            { "data": "precio" }
                             
                             
                             //{ "data": "Probability" },
@@ -100,7 +98,7 @@
                     "order":[1,'asc'],
                     "columnDefs": [
                             {"orderable": false, "targets": 0},                            
-                            {"orderable": false, "targets": 3}                                                        
+                            {"orderable": false, "targets": 4}                                                        
                     ]
             });
             /////Fin definición datatable

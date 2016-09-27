@@ -255,4 +255,57 @@ class OrdenCreadaController extends Controller
         
         return new Response(json_encode($row));
     }
+    
+    /**
+     * Recuperar el detalle del pedido que se ha solicitado
+     *
+     * @Route("/recuperar/detalle-pedido-solicitado", name="admin_recuperar_detalle_pedido", options={"expose"=true}))
+     * @Method("POST")
+     */
+    public function recuperarDetallePedidoAction(Request $request)
+    {
+        try {
+            $id=$request->get("id");
+            $response = new JsonResponse();
+            $row['data']= array();
+            
+            $sql = "select CONCAT(cli.nombre, ' ', cli.apellido) as cliente, pro.nombre as producto, ord.direccion, ord.precio, ord.cantidad, "
+                    . "DATE_FORMAT(ord.fecha_registro, '%d/%m/%Y') as fecha_registro, cli.telefono, cli.email,"
+                    . "ord.imagen, shi.valor as valorShipping, mun.nombre as municipio, dep.nombre as depto "
+                    . "from orden_creada ord inner join producto pro on ord.producto = pro.id  "
+                    . "inner join cliente cli on ord.cliente_id = cli.id "
+                    . "inner join shipping shi on ord.shipping = shi.id "
+                    . "inner join municipio mun on ord.municipio_id = mun.id "
+                    . "inner join departamento dep on mun.departamento_id = dep.id  "
+                    . "where cookie = ".$id." ";
+            
+            $stm = $this->container->get('database_connection')->prepare($sql);
+            $stm->execute();
+            $row['data'] = $stm->fetchAll();
+            
+            if(!count($row['data'])){
+                $row['error'] = "Error";
+            }
+            else{
+                
+            }
+                        
+            $response->setData($row); 
+            
+        } catch (\Exception $e) {
+            switch (intval($e->getCode()))
+                    {
+                        case 2003: 
+                            $data['error'] = $this->getParameter('app.serverOffline');
+                        break;
+                        default :
+                            $data['error'] = $e->getMessage();                     
+                        break;
+                    }      
+            $response->setData($data);
+        }
+        
+        return $response;
+        
+    }
 }

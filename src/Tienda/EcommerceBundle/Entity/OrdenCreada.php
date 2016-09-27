@@ -69,6 +69,20 @@ class OrdenCreada
      * @ORM\Column(name="numero_referencia", type="string", length=30, nullable=true)
      */
     private $numeroReferencia;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="talla", type="string", length=50, nullable=true)
+     */
+    private $talla;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="color", type="string", length=30, nullable=true)
+     */
+    private $color;
 
     /**
      * @var string
@@ -125,6 +139,16 @@ class OrdenCreada
     private $producto;
     
     /**
+     * @var \TipoOrden
+     *
+     * @ORM\ManyToOne(targetEntity="TipoOrden")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tipo_orden", referencedColumnName="id")
+     * })
+     */
+    private $tipoOrden;
+    
+    /**
      * @var \Shipping
      *
      * @ORM\ManyToOne(targetEntity="Shipping")
@@ -132,7 +156,7 @@ class OrdenCreada
      *   @ORM\JoinColumn(name="shipping", referencedColumnName="id")
      * })
      */
-    private $shipping;
+    private $shipping;   
 
 
 
@@ -352,6 +376,52 @@ class OrdenCreada
     {
         return $this->estado;
     }
+    
+    /**
+     * Set talla
+     *
+     * @param string $talla
+     * @return OrdenCreada
+     */
+    public function setTalla($talla)
+    {
+        $this->talla = $talla;
+
+        return $this;
+    }
+
+    /**
+     * Get talla
+     *
+     * @return string 
+     */
+    public function getTalla()
+    {
+        return $this->talla;
+    }
+
+    /**
+     * Set color
+     *
+     * @param string $color
+     * @return OrdenCreada  
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get numeroReferencia
+     *
+     * @return string 
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
 
     /**
      * Set cliente
@@ -443,6 +513,29 @@ class OrdenCreada
     public function getProducto()
     {
         return $this->producto;
+    }
+    
+    /**
+     * Set tipoOrden
+     *
+     * @param \Tienda\EcommerceBundle\Entity\Producto $tipoOrden
+     * @return OrdenCreada
+     */
+    public function setTipoOrden(\Tienda\EcommerceBundle\Entity\Producto $tipoOrden = null)
+    {
+        $this->tipoOrden = $tipoOrden;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoOrden
+     *
+     * @return \Tienda\EcommerceBundle\Entity\TipoOrden 
+     */
+    public function getTipoOrden()
+    {
+        return $this->tipoOrden;
     }
     
     /**

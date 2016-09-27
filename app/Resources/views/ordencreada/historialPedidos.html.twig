@@ -19,22 +19,28 @@
 
 {% block navegacion %}
     <a href="{{ path('admin_historial_pedidos') }}" class="leftnava"><li class="leftnav left active">Historial pedidos<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
+    <a href="{{ path('admin_categoria_index') }}" class="leftnava"><li class="leftnav left ">Ventas en tienda<span class="pull-right right"><i class=""></i></span></li></a>
 {% endblock %}
 
 {% block contenido %}
-    <div class="col-md-12 col-xs-12">
-        <table id="historialPedidos" class="mdl-data-table dataTable" width="100%" cellspacing="0" style="text-align:left;">
+    <div id="tablaPedidos" class="col-md-12 col-xs-12">
+        <table id="historialPedidos" class="mdl-data-table table-hover no-margin" width="100%" cellspacing="0" style="text-align:left;">
             <thead>
                 <tr role="row">
                     {#<th style="width: 20px; padding-left: 8px;"><input type="checkbox" name="checktodos" onclick = "seleccionarTodo();"></th> #}
-                    <th style="text-align: center; {#width: 15%;#}">Fecha de pedido</th>
-                    <th style="text-align: center; {#width: 35%;#}">Cliente</th>
-                    <th style="text-align: center; {#width: 40%;#}">Dirección de envío</th>
-                    <th style="text-align: center; {#width: 10%;#}">Total cancelado + shipping ($)</th>
+                    <th width = "15%" style="text-align: center; {#width: 15%;#}" >Fecha de pedido</th>
+                    <th width = "35%" style="text-align: center; {#width: 35%;#}">Cliente</th>
+                    {#<th width = "40%" style="text-align: center;">Dirección de envío</th>#}
+                    <th width = "10%" style="text-align: center; {#width: 10%;#}">Total cancelado + shipping ($)</th>
                 </tr>
             </thead>
         </table>
-    </div>   
+    </div>  
+    <div id="detallePedido" class="col-md-12 col-xs-12 hide">
+        <div class="row">
+            <div id="mostrarPedido"></div>
+        </div>
+    </div>
 {% endblock %}    
 
 {% block js_extend %}
@@ -57,13 +63,16 @@
                         //{ "data": "check" },
                         { "data": "fecha" },
                         { "data": "cliente" },
-                        { "data": "direccion" },
+                        //{ "data": "direccion" },
                         { "data": "total" }
                 ],
-                "order":[0,'asc'],
+                "order":[0,'desc'],
                 {#"order":[1,'asc'],#}
                 {#"columnDefs": [
-                        { "orderable": false, "targets":  }
+                        { "width": "15%", "targets": 0 },
+                        { "width": "35%", "targets": 1 },
+                        { "width": "40%", "targets": 2 }
+                       // { "width": "10%", "targets": 3 }
                 ],#}
                 "language": {
                         "info": "{{dtInfo}} _PAGE_ de _PAGES_",

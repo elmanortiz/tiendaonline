@@ -188,7 +188,7 @@ class ProductoController extends Controller
         $busqueda['value'] = str_replace(' ', '%', $busqueda['value']);
         if ($busqueda['value'] != '') {
 
-            $dql = "SELECT CONCAT('<div id=\"',pac.id,'\" style=\"text-align:center;\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as chk, CONCAT('<div id=\"',pac.id,'\" style=\"text-align:center;\">',pac.nombre,'</div>') as name, CONCAT('<div style=\"text-align:center;\">',pac.precio,'</div>') as precio, CONCAT('<div style=\"text-align:center;\">',pac.stock,'</div>') as stock, CONCAT('<div style=\"text-align:center;\">',cat.nombre,'</div>') as categoria, '<a ><i style=\"cursor:pointer;\"  class=\"infoPaciente fa fa-info-circle\"></i></a>' as actions FROM TiendaEcommerceBundle:Producto pac "
+            $dql = "SELECT CONCAT('<div id=\"',pac.id,'\" style=\"text-align:center;\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as chk, CONCAT('<div id=\"',pac.id,'\" style=\"text-align:left;\">',pac.nombre,'</div>') as name, CONCAT('<div style=\"text-align:center;\">',pac.precio,'</div>') as precio, CONCAT('<div style=\"text-align:center;\">',pac.stock,'</div>') as stock, CONCAT('<div style=\"text-align:center;\">',cat.nombre,'</div>') as categoria, '<a ><i style=\"cursor:pointer;\"  class=\"infoPaciente fa fa-info-circle\"></i></a>' as actions FROM TiendaEcommerceBundle:Producto pac "
                     . "JOIN pac.categoria as cat "
                     . "WHERE pac.estado=1 AND (CONCAT(upper(pac.nombre),' ') LIKE upper(:busqueda) OR CONCAT(upper(pac.stock),' ') LIKE upper(:busqueda) OR CONCAT(upper(pac.stock),' ') LIKE upper(:busqueda) OR CONCAT(upper(cat.nombre),' ') LIKE upper(:busqueda)) "
                     . "ORDER BY " . $orderByText . " " . $orderDir;
@@ -198,7 +198,7 @@ class ProductoController extends Controller
 
             $row['recordsFiltered'] = count($row['data']);
 
-            $dql = "SELECT CONCAT('<div id=\"',pac.id,'\" style=\"text-align:center;\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as chk, CONCAT('<div id=\"',pac.id,'\" style=\"text-align:center;\">',pac.nombre,'</div>') as name,CONCAT('<div style=\"text-align:center;\">',pac.precio,'</div>') as precio, CONCAT('<div style=\"text-align:center;\">',pac.stock,'</div>') as stock, CONCAT('<div style=\"text-align:center;\">',cat.nombre,'</div>') as categoria, '<a ><i style=\"cursor:pointer;\"  class=\"infoPaciente fa fa-info-circle\"></i></a>' as actions FROM TiendaEcommerceBundle:Producto pac "
+            $dql = "SELECT CONCAT('<div id=\"',pac.id,'\" style=\"text-align:center;\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as chk, CONCAT('<div id=\"',pac.id,'\" style=\"text-align:left;\">',pac.nombre,'</div>') as name,CONCAT('<div style=\"text-align:center;\">',pac.precio,'</div>') as precio, CONCAT('<div style=\"text-align:center;\">',pac.stock,'</div>') as stock, CONCAT('<div style=\"text-align:center;\">',cat.nombre,'</div>') as categoria, '<a ><i style=\"cursor:pointer;\"  class=\"infoPaciente fa fa-info-circle\"></i></a>' as actions FROM TiendaEcommerceBundle:Producto pac "
                     . "JOIN pac.categoria as cat "
                     . "WHERE pac.estado=1 AND (CONCAT(upper(pac.nombre),' ') LIKE upper(:busqueda) OR CONCAT(upper(pac.stock),' ') LIKE upper(:busqueda) OR CONCAT(upper(pac.stock),' ') LIKE upper(:busqueda) OR CONCAT(upper(cat.nombre),' ') LIKE upper(:busqueda)) "
                     . "ORDER BY " . $orderByText . " " . $orderDir;
@@ -208,7 +208,7 @@ class ProductoController extends Controller
                     ->setMaxResults($longitud)
                     ->getResult();
         } else {
-            $dql = "SELECT CONCAT('<div id=\"',pac.id,'\" style=\"text-align:center;\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as chk, CONCAT('<div id=\"',pac.id,'\" style=\"text-align:center;\">',pac.nombre,'</div>') as name,CONCAT('<div style=\"text-align:center;\">',pac.precio,'</div>') as precio, CONCAT('<div style=\"text-align:center;\">',pac.stock,'</div>') as stock, CONCAT('<div style=\"text-align:center;\">',cat.nombre,'</div>') as categoria, '<a ><i style=\"cursor:pointer;\"  class=\"infoPaciente fa fa-info-circle\"></i></a>' as actions, pac.estado as estado FROM TiendaEcommerceBundle:Producto pac "
+            $dql = "SELECT CONCAT('<div id=\"',pac.id,'\" style=\"text-align:center;\"><input style=\"z-index:5;\" class=\"chkItem\" type=\"checkbox\"></div>') as chk, CONCAT('<div id=\"',pac.id,'\" style=\"text-align:left;\">',pac.nombre,'</div>') as name,CONCAT('<div style=\"text-align:right;\">',pac.precio,'</div>') as precio, CONCAT('<div style=\"text-align:center;\">',pac.stock,'</div>') as stock, CONCAT('<div style=\"text-align:center;\">',cat.nombre,'</div>') as categoria, '<a ><i style=\"cursor:pointer;\"  class=\"infoPaciente fa fa-info-circle\"></i></a>' as actions, pac.estado as estado FROM TiendaEcommerceBundle:Producto pac "
                     . "JOIN pac.categoria as cat "
                     . "WHERE pac.estado = 1 "
                     . "ORDER BY " . $orderByText . " " . $orderDir;
