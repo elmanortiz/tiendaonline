@@ -27,6 +27,13 @@ class Producto
      * @ORM\Column(name="nombre", type="string", length=200, nullable=true)
      */
     private $nombre;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="precioanterior", type="decimal", precision=15, scale=2, nullable=true)
+     */
+    private $precioanterior;
 
     /**
      * @var string
@@ -149,6 +156,29 @@ class Producto
         return $this->nombre;
     }
 
+    /****************************************************************************************/
+        /**
+     * Set precioanterior
+     *
+     * @param string $precioanterior
+     * @return Producto
+     */
+    public function setPrecioAnterior($precioanterior) {
+        $this->precioanterior = $precioanterior;
+
+        return $this;
+    }
+
+    /**
+     * Get precioanterior
+     *
+     * @return string 
+     */
+    public function getPrecioAnterior() {
+        return $this->precioanterior;
+    }
+            
+    
     /**
      * Set precio
      *
