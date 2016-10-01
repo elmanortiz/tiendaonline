@@ -7,11 +7,14 @@
     <link rel="stylesheet" href="{{ asset('Resources/slider/css/bootstrap-slider.min.css') }}">
 {% endblock %}
 {% block descripcion %}
-     <div class="col-md-6">
+     <div class="col-md-6 col-sm-8">
           <p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Historial de pedidos</p>
           <p class="robo" style="font-weight: 300; font-size: 14px; ">Se muestran todos los pedidos que se han realizado.</p>
      </div>
-
+    <div class="col-md-6 col-sm-4">
+        <p></p>
+        <button id="btnRegresar" class="btn btn-sm btn-default pull-right hide">Regresar</button>
+    </div>
 {% endblock %}
 {% block acciones %}
      
@@ -19,7 +22,7 @@
 
 {% block navegacion %}
     <a href="{{ path('admin_historial_pedidos') }}" class="leftnava"><li class="leftnav left active">Historial pedidos<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
-    <a href="{{ path('admin_categoria_index') }}" class="leftnava"><li class="leftnav left ">Ventas en tienda<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_venta_tienda_index') }}" class="leftnava"><li class="leftnav left ">Ventas en tienda<span class="pull-right right"><i class=""></i></span></li></a>
 {% endblock %}
 
 {% block contenido %}
@@ -45,7 +48,7 @@
 
 {% block js_extend %}
     <script type="text/javascript" src="{{ asset('Resources/animations/funciones.js') }}"></script> 
-    <script type="text/javascript" src="{{ asset('Resources/animations/pedidos/pedidos.js') }}"></script> 
+    <script type="text/javascript" src="{{ asset('Resources/animations/pedidos/historialPedidos.js') }}"></script> 
     <script type="text/javascript">
         $(document).ready(function() {
             $('#departamento').select2();

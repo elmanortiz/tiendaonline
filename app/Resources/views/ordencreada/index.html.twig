@@ -1,53 +1,107 @@
-{% extends 'base.html.twig' %}
+{% extends ':layout:layouterp.html.twig' %}
 
-{% block body %}
-    <h1>OrdenCreada list</h1>
+{% block title -%}<title> ARIASTORE | Ventas en tienda </title>{% endblock %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Cookie</th>
-                <th>Nombreprod</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Direccion</th>
-                <th>Numeroreferencia</th>
-                <th>Imagen</th>
-                <th>Estado</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ordenCreada in ordenCreadas %}
-            <tr>
-                <td><a href="{{ path('admin_orden_show', { 'id': ordenCreada.id }) }}">{{ ordenCreada.id }}</a></td>
-                <td>{{ ordenCreada.cookie }}</td>
-                <td>{{ ordenCreada.nombreProd }}</td>
-                <td>{{ ordenCreada.precio }}</td>
-                <td>{{ ordenCreada.cantidad }}</td>
-                <td>{{ ordenCreada.direccion }}</td>
-                <td>{{ ordenCreada.numeroReferencia }}</td>
-                <td>{{ ordenCreada.imagen }}</td>
-                <td>{{ ordenCreada.estado }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('admin_orden_show', { 'id': ordenCreada.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('admin_orden_edit', { 'id': ordenCreada.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('admin_orden_new') }}">Create a new entry</a>
-        </li>
-    </ul>
+{% block customcss %}
+    <link rel="stylesheet" href="{{ asset('Resources/customscss/salestage.css') }}">
+    <link rel="stylesheet" href="{{ asset('Resources/slider/css/bootstrap-slider.min.css') }}">
 {% endblock %}
+{% block descripcion %}
+     <div class="col-md-6 col-sm-8">
+          <p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Ventas en tienda</p>
+          <p class="robo" style="font-weight: 300; font-size: 14px; ">Se muestran las ventas realizadas desde la tienda.</p>
+     </div>    
+{% endblock %}
+{% block acciones %}
+    <div class="col-md-6 col-sm-4">
+        <button id="btnAdd" data-loading-text="loading..." autocomplete="off" class="btnAdd btn btn-sm btn-primary btn-flat pull-right">Nueva venta</button>
+        <button id="btnRegresar" class="btn btn-sm btn-default pull-right hide">Regresar</button>
+    </div>
+{% endblock acciones %}
+
+{% block navegacion %}
+    <a href="{{ path('admin_historial_pedidos') }}" class="leftnava"><li class="leftnav left ">Historial pedidos<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_venta_tienda_index') }}" class="leftnava"><li class="leftnav left active">Ventas en tienda<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
+{% endblock %}
+
+{% block contenido %}
+    <div id="tablaPedidos" class="col-md-12 col-xs-12">
+        <table id="ventasTienda" class="mdl-data-table table-hover no-margin" width="100%" cellspacing="0" style="text-align:left;">
+            <thead>
+                <tr role="row">
+                    {#<th style="width: 20px; padding-left: 8px;"><input type="checkbox" name="checktodos" onclick = "seleccionarTodo();"></th> #}
+                    <th style="text-align: center;" >Orden #</th>
+                    <th style="text-align: center;" >Fecha de venta</th>
+                    <th style="text-align: center;">Cliente</th>
+                    <th style="text-align: center;">Total cancelado ($)</th>
+                </tr>
+            </thead>
+        </table>
+    </div>  
+    <div id="informacionVenta" class="col-md-12 col-xs-12 hide">
+        <div class="row">
+            <div id="mostrarPedido">
+                {% include ':ordencreada:show.html.twig' %}
+            </div>
+        </div>
+    </div>
+    
+    <div id="registroVenta" class="col-md-12 col-xs-12 hide">
+        <div class="row">
+            <div id="formVenta">
+                {% include ':ordencreada:new.html.twig' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}    
+
+{% block js_extend %}
+    <script type="text/javascript" src="{{ asset('Resources/jquery/jquery.numeric.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('Resources/validations/validation.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('Resources/persist/pedidos/ventaTienda.js') }}"></script> 
+    <script type="text/javascript" src="{{ asset('Resources/animations/pedidos/ventaTienda.js') }}"></script> 
+    <script type="text/javascript" src="{{ asset('Resources/animations/funciones.js') }}"></script> 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#departamento').select2();
+            $('.cant').numeric('.'); 
+            $('.price').numeric('.'); 
+            
+            /////Definición datatable
+            var table = $('#ventasTienda').DataTable({
+                dom:'ftp',
+                "processing": false,
+                "serverSide": true,
+                "ajax": {
+                        "url": Routing.generate('admin_ventastienda_data'),
+                        "type": 'GET'
+                },
+                "columns": [
+                        //{ "data": "check" },
+                        { "data": "referencia" },
+                        { "data": "fecha" },
+                        { "data": "cliente" },
+                        { "data": "total" }
+                ],
+                //"order":[1,'desc'],
+                "columnDefs": [
+                        {"orderable": false, "targets": 3}                                                        
+                ],
+                "language": {
+                        "info": "{{dtInfo}} _PAGE_ de _PAGES_",
+                        "infoEmpty": "{{dtInfoEmpty}}",
+                        "zeroRecords": "{{dtZeroRecords}}",
+                        "emptyTable": "{{dtEmptyTable}}",
+                        "paginate": { 
+                            "next": "{{dtNext}}",
+                            "previous": "{{dtPrev}}"
+                        },
+                        "processing": "{{dtProcessing}}",
+                        "search": "{{dtSearch}}",
+                        "lengthMenu": "{{dtLengthMenu}} _MENU_ registros"
+                    }
+            });
+            /////Fin definición datatable 
+        });
+    </script>
+{% endblock %}    

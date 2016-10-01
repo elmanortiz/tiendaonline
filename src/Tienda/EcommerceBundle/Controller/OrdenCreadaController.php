@@ -207,7 +207,7 @@ class OrdenCreadaController extends Controller
                     . "inner join departamento dep1 on mun.departamento_id = dep1.id "
                     . "inner join cliente cli on ped.cliente_id = cli.id "
                     . "inner join shipping shi on ped.shipping = shi.id "
-                    . "where CONCAT(upper(ped.direccion), ' ' , upper(cli.nombre), ' ' , upper(cli.apellido), ' ' , upper(mun.nombre)) LIKE upper('%".$busqueda['value']."%') "
+                    . "where ped.tipo_orden = 1 and CONCAT(upper(ped.direccion), ' ' , upper(cli.nombre), ' ' , upper(cli.apellido), ' ' , upper(mun.nombre)) LIKE upper('%".$busqueda['value']."%') "
                     . "group by ped.cookie "
                     . "ORDER BY ".$orderByText." ".$orderDir
                     . " LIMIT $start, $longitud ";
@@ -226,7 +226,7 @@ class OrdenCreadaController extends Controller
                     . "inner join departamento dep1 on mun.departamento_id = dep1.id "
                     . "inner join cliente cli on ped.cliente_id = cli.id "
                     . "inner join shipping shi on ped.shipping = shi.id "
-                    . "where CONCAT(upper(ped.direccion), ' ' , upper(cli.nombre), ' ' , upper(cli.apellido), ' ' , upper(mun.nombre)) LIKE upper('%".$busqueda['value']."%') "
+                    . "where ped.tipo_orden = 1 and CONCAT(upper(ped.direccion), ' ' , upper(cli.nombre), ' ' , upper(cli.apellido), ' ' , upper(mun.nombre)) LIKE upper('%".$busqueda['value']."%') "
                     . "group by ped.cookie "
                     . "ORDER BY ".$orderByText." ".$orderDir
                     . " LIMIT $start, $longitud ";
@@ -244,6 +244,7 @@ class OrdenCreadaController extends Controller
                     . "inner join departamento dep1 on mun.departamento_id = dep1.id "
                     . "inner join cliente cli on ped.cliente_id = cli.id "
                     . "inner join shipping shi on ped.shipping = shi.id "
+                    . "where ped.tipo_orden = 1 "
                     . "group by ped.cookie "
                     . "ORDER BY ".$orderByText." ".$orderDir
                     . " LIMIT $start, $longitud ";
@@ -270,7 +271,7 @@ class OrdenCreadaController extends Controller
             $row['data']= array();
             
             $sql = "select CONCAT(cli.nombre, ' ', cli.apellido) as cliente, pro.nombre as producto, ord.direccion, ord.precio, ord.cantidad, "
-                    . "DATE_FORMAT(ord.fecha_registro, '%d/%m/%Y') as fecha_registro, cli.telefono, cli.email,"
+                    . "ord.talla, ord.color, DATE_FORMAT(ord.fecha_registro, '%d/%m/%Y') as fecha_registro, cli.telefono, cli.email,"
                     . "ord.imagen, shi.valor as valorShipping, mun.nombre as municipio, dep.nombre as depto "
                     . "from orden_creada ord inner join producto pro on ord.producto = pro.id  "
                     . "inner join cliente cli on ord.cliente_id = cli.id "

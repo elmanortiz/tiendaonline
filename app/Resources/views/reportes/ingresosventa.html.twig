@@ -1,0 +1,29 @@
+{% extends ':layout:layouterp.html.twig' %}
+
+{% block title -%}<title> ARIASTORE | Reporte de ingresos por venta </title>{% endblock %}
+
+{% block customcss %}
+    <link rel="stylesheet" href="{{ asset('Resources/customscss/salestage.css') }}">
+    <link rel="stylesheet" href="{{ asset('Resources/slider/css/bootstrap-slider.min.css') }}">
+{% endblock %}
+{% block descripcion %}
+     <div class="col-md-6 col-sm-8">
+          <p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Reporte de ingresos totales</p>
+          <p class="robo" style="font-weight: 300; font-size: 14px; ">Se muestran los ingresos por venta realizados en linea y desde la tienda en un periodo determinado.</p>
+     </div>    
+{% endblock %}
+{% block acciones %}
+    <div class="col-md-6 col-sm-4">
+        <button id="btnAdd" data-loading-text="loading..." autocomplete="off" class="btnAdd btn btn-sm btn-primary btn-flat pull-right">Nueva venta</button>
+        <button id="btnRegresar" class="btn btn-sm btn-default pull-right hide">Regresar</button>
+    </div>
+{% endblock acciones %}
+
+{% block navegacion %}
+    <a href="{{ path('admin_ingresos_venta') }}" class="leftnava"><li class="leftnav left active">Ingresos venta<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
+    <a href="{{ path('admin_ingresos_venta_categoria') }}" class="leftnava"><li class="leftnav left ">Ingresos categoria<span class="pull-right right"><i class=""></i></span></li></a>
+{% endblock %}
+
+{% block contenido %}
+    
+{% endblock %}    

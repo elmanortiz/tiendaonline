@@ -27,6 +27,13 @@ class OrdenCreada
      * @ORM\Column(name="cookie", type="bigint", nullable=true)
      */
     private $cookie;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_venta", type="bigint", nullable=true)
+     */
+    private $idVenta;
 
     /**
      * @var string
@@ -194,6 +201,29 @@ class OrdenCreada
     }
 
     /**
+     * Set idVenta
+     *
+     * @param integer $idVenta
+     * @return OrdenCreada
+     */
+    public function setIdVenta($idVenta)
+    {
+        $this->idVenta = $idVenta;
+
+        return $this;
+    }
+
+    /**
+     * Get idVenta
+     *
+     * @return integer 
+     */
+    public function getIdVenta()
+    {
+        return $this->idVenta;
+    }    
+    
+    /**
      * Set nombreProd
      *
      * @param string $nombreProd
@@ -205,7 +235,7 @@ class OrdenCreada
 
         return $this;
     }
-
+        
     /**
      * Get nombreProd
      *
@@ -518,10 +548,10 @@ class OrdenCreada
     /**
      * Set tipoOrden
      *
-     * @param \Tienda\EcommerceBundle\Entity\Producto $tipoOrden
+     * @param \Tienda\EcommerceBundle\Entity\TipoOrden $tipoOrden
      * @return OrdenCreada
      */
-    public function setTipoOrden(\Tienda\EcommerceBundle\Entity\Producto $tipoOrden = null)
+    public function setTipoOrden(\Tienda\EcommerceBundle\Entity\TipoOrden $tipoOrden = null)
     {
         $this->tipoOrden = $tipoOrden;
 

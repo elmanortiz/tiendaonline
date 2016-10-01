@@ -1,16 +1,134 @@
-{% extends 'base.html.twig' %}
+<style type="text/css">
+    @media ( max-width: 585px ) {
+        .input-group span.input-group-btn,.input-group input,.input-group button{
+            display: block;
+            width: 100%;
+            border-radius: 0;
+            margin: 0;
+        }
+        .input-group {
+            position: relative;   
+        }
+        .input-group span.data-up{
+            position: absolute;
+            top: 0;
+        }
+        .input-group span.data-dwn{
+            position: absolute;
+            bottom: 0;
+        }
+        .form-control.text-center {
+            margin: 34px 0;
+        }
+        .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group{
+            margin-left:0;
+        }
 
-{% block body %}
-    <h1>OrdenCreada creation</h1>
+    }
+</style> 
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
-    {{ form_end(form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('admin_orden_index') }}">Back to the list</a>
-        </li>
-    </ul>
-{% endblock %}
+<div class="col-md-12 col-xs-12">
+    <div id="pnAdd" class="panel panel-default">
+        <div class="panel-heading"><div class="pnHeadingLabel">Nueva venta</div></div>
+        <div class="panel-body">
+            <form id="frmVentaTienda"  method="post" enctype="multipart/form-data">
+                <div class="col-md-6 col-xs-12" style="margin-bottom: 20px;">
+                    <label class="radio-inline"><input id="cli1" type="radio" name="cliente-opt" class="custom-control-input" value="1" checked="checked">Cliente existente</label>
+                    <label class="radio-inline"><input id="cli0" type="radio" name="cliente-opt" class="custom-control-input" value="0">Nuevo cliente</label>
+                </div>
+                <div class="clearfix"></div>
+                <input id="txtId" type="hidden" name="id" class="input-sm form-control">
+                <div id="existente" class="">
+                    <div class="col-md-4 col-xs-12">
+                        <label class="control-label">Cliente</label>
+                        <select id="sCliente" style="width:100%;" type="text" name="sCliente" class="input-sm form-control validateSelect">                  
+                        </select>
+                    </div>
+                </div>
+                <div id="nuevoCliente" class="hidden">
+                    <div class="col-md-3 col-xs-12">
+                        <label class="control-label">Nombre de cliente (*)</label>
+                        <input id="txtName" type="text" name="txtName" class="input-sm form-control">
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label class="control-label">Apellido de cliente (*)</label>
+                        <input id="txtLastname" type="text" name="txtLastname" class="input-sm form-control">
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label class="control-label">Correo electrónico</label>
+                        <input id="txtEmail" type="text" name="txtEmail" class="input-sm form-control">
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label class="control-label">Teléfono</label>
+                        <input id="txtPhone" type="text" name="txtPhone" class="input-sm form-control">
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <hr>
+                <div class="col-md-12 col-xs-12" style="margin-top: 25px; margin-bottom: 15px;">                
+                    <button id="btnNuevaFila" class="btn btn-sm btn-success pull-right"><i class="fa fa-plus"></i> Nueva fila</button>                    
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-sm-offset-1 col-sm-1 text-center">
+                    <label class="control-label">Cantidad</label>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <label class="control-label">Producto</label>
+                </div>
+                <div class="col-sm-2 text-center">
+                    <label class="control-label">Talla</label>
+                </div>
+                <div class="col-sm-2 text-center">
+                    <label class="control-label">Precio ($)</label>
+                </div>
+                <div class="col-sm-2 text-center">
+                    <label class="control-label">Total ($)</label>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-sm-offset-1 col-sm-11">
+                    <hr>
+                </div>
+                <div class="clearfix"></div>
+                <div class="removeRow col-sm-1">
+                    <button id="deleteProd-0" class="btn removeProd btn-danger hidden"><i class="fa fa-remove"></i></button>
+                </div>
+                <div class="cantidad col-sm-1 text-center">
+                    <input id="txtCantidad-0" type="text" name="cantidad[]" class="cant input-sm form-control text-center validateInput" value="1" min="1">                                                       
+                </div>
+                <div class="producto col-sm-4">
+                    <div id="producto-0" >
+                        <select id="sProducto-0" style="width:100%;" type="text" name="sProducto[]" class="sProducto input-sm form-control validateSelectP"></select>
+                    </div>
+                </div>
+                <div class="talla col-sm-2">
+                    <div id="talla-0" style="margin-top:6px;">
+                        <select id="sTalla-0" style="width:100%;" type="text" name="sTalla[]" class="input-sm form-control"></select>
+                    </div>
+                </div>
+                <div class="precio col-sm-2 text-center">
+                    <input id="txtPrecio-0" type="text" name="precio[]" class="price input-sm form-control validateInput" value="0" style="text-align: right;">
+                </div>
+                <div class="total col-sm-2" style="text-align: right;">
+                    {#<label id="total-0" class="venta control-label">0.00</label>#}
+                    <div id="total-0" style="margin-top: 10px;"><label class="venta control-label">0.00</label></div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-sm-offset-10 col-sm-2"><hr></div>
+                <div class="clearfix"></div>
+                <div class="col-sm-offset-7 col-sm-3" style="text-align: right;">
+                    <label class="control-label">Total de venta ($)</label>
+                </div>
+                <div class="col-sm-2" style="text-align: right; margin-bottom: 25px;">
+                    <div id="total-0">
+                        <label class="totalVenta control-label">0.00</label>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-6 pull-right text-right" style="margin-top:20px;">
+                    <button id="btnSave" class="btn btn-sm btn-default">Guardar</button>
+                    <button id="btnSaveAndNew" class="btn btn-sm btn-primary">Guardar y nuevo registro de venta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -64,3 +64,46 @@ function seleccionarTodo() {
     });	       
 }
 
+function convertirASelect2Ajax(id, ruta){
+    $('#' + id).select2({
+        ajax: {
+            url: Routing.generate(ruta),
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term, 
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                var select2Data = $.map(data.data, function (obj) {
+                    obj.id = obj.objid;
+                    obj.text = obj.nombre;
+
+
+                    if(obj.disponible == 0) {
+                        obj.disabled = true;
+                    } 
+
+                    return obj;
+                });
+
+                return {
+                    results: select2Data
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function (markup) { return markup; }, 
+        minimumInputLength: 1,
+        templateResult: formatRepoProducto, 
+        templateSelection: formatRepoSelectionProducto,
+        formatInputTooShort: function () {
+            return "Enter 1 Character";
+        }
+    });  
+    
+    return 0;
+}
+
