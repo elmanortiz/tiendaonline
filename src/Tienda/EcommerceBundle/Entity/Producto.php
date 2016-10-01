@@ -156,8 +156,8 @@ class Producto
         return $this->nombre;
     }
 
-    /****************************************************************************************/
-        /**
+    
+    /**
      * Set precioanterior
      *
      * @param string $precioanterior
@@ -201,7 +201,28 @@ class Producto
     {
         return $this->precio;
     }
+    
+    /**
+     * Set descripcion
+     *
+     * @param string $descripcion
+     * @return Producto
+     */
+    public function setDescripcion($descripcion) {
+        $this->descripcion = $descripcion;
 
+        return $this;
+    }
+
+    /**
+     * Get descripcion
+     *
+     * @return string 
+     */
+    public function getDescripcion() {
+        return $this->descripcion;
+    }
+        
     /**
      * Set numeroreferencia
      *

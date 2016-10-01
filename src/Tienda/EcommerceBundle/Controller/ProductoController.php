@@ -230,7 +230,7 @@ class ProductoController extends Controller
     {
         $parameters = $request->request->all();
         $em = $this->getDoctrine()->getManager();
-        //var_dump($parameters['precioanterior']);
+        //var_dump($parameters['descripcion']);
         //die();
         
         
@@ -243,6 +243,7 @@ class ProductoController extends Controller
         $producto->setNombre($parameters['nombreprod']);
         $producto->setPrecioAnterior($parameters['precioanterior']);
         $producto->setPrecio($parameters['precio']);
+        $producto->setDescripcion($parameters['descripcion']);
         $producto->setNumeroReferencia($parameters['codigo']);
         $producto->setEstado(1);
         $producto->setStock($parameters['stock']);
@@ -265,7 +266,7 @@ class ProductoController extends Controller
         
         //Insertando datos en la tabla de atributos del producto
         $n=  count($parameters['atributo']);
-        for($i=0;$i<$n;$i++){
+        for($i=1;$i<$n;$i++){
             $atributoproducto->setNombre($parameters['atributo'][$i]);
             $atributoproducto->setPorcentaje($parameters['porcentaje'][$i]);
             $atributoproducto->setProducto($producto);//Id producto
@@ -370,7 +371,7 @@ class ProductoController extends Controller
         
         /**Producto-categoria-imagen**/
         $em = $this->getDoctrine()->getManager(); 
-        $sqlProducto = "select prod.id as id, prod.nombre as nombre, prod.precio as precio, prod.numeroReferencia as codigo, prod.stock, prod.disponible as dispo, prod.mensaje as msj, cat.id as idcat,
+        $sqlProducto = "select prod.id as id, prod.nombre as nombre, prod.precio as precio, prod.descripcion as descripcion, prod.numeroReferencia as codigo, prod.stock, prod.disponible as dispo, prod.mensaje as msj, prod.precioanterior as precioanterior, cat.id as idcat,
                                 cat.nombre as nomcat,
                                 imgprod.imagen1 as img1, imgprod.imagen2 as img2, imgprod.imagen3 as img3                                
                                 from producto prod 
@@ -445,16 +446,18 @@ class ProductoController extends Controller
     public function editarproductoAction(Request $request) {
         $parameters = $request->request->all();
         $em = $this->getDoctrine()->getManager();
-                
-        $producto = $em->getRepository('TiendaEcommerceBundle:Producto')->find($parameters['idproducto']);
-                       
+        var_dump($parameters['precioanterior']);
+        
+        $producto = $em->getRepository('TiendaEcommerceBundle:Producto')->find($parameters['idproducto']);                       
         $atributoproducto = new Atributoproducto();
         $fotoproducto = $em->getRepository('TiendaEcommerceBundle:Imagenproducto')->findOneBy(array('producto'=>$producto));
         $colorproducto = new ColorProducto();
         $tallaproducto = new TallaProducto();
 
         $producto->setNombre($parameters['nombreprod']);
+        $producto->setPrecioAnterior($parameters['precioanterior']);
         $producto->setPrecio($parameters['precio']);
+        $producto->setDescripcion($parameters['descripcion']);
         $producto->setNumeroReferencia($parameters['codigo']);
         $producto->setEstado(1);
         $producto->setStock($parameters['stock']);
