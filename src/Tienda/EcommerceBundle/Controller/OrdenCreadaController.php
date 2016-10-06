@@ -168,7 +168,17 @@ class OrdenCreadaController extends Controller
         $busqueda = $request->query->get('search');
         
         $em = $this->getDoctrine()->getEntityManager();
-        $rowsTotal = $em->getRepository('TiendaEcommerceBundle:OrdenCreada')->findAll();
+        //$rowsTotal = $em->getRepository('TiendaEcommerceBundle:OrdenCreada')->findAll();
+        
+        $sql = "select DATE_FORMAT(ped.fecha_registro, '%d/%m/%Y %h:%i:%s %p') as fecha, sum((ped.precio * ped.cantidad)) as total, "
+                . "ped.id_venta as referencia, CONCAT(cli.nombre, ' ', cli.apellido) as cliente "
+                . "from orden_creada ped inner join cliente cli on ped.cliente_id = cli.id "
+                . "where ped.tipo_orden = 1 "
+                . "group by ped.cookie ";
+
+        $stm = $this->container->get('database_connection')->prepare($sql);
+        $stm->execute();
+        $rowsTotal = $stm->fetchAll();
         
         $row['draw']=$draw++;  
         $row['recordsTotal'] = count($rowsTotal);

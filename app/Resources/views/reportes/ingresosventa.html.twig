@@ -3,8 +3,9 @@
 {% block title -%}<title> ARIASTORE | Reporte de ingresos por venta </title>{% endblock %}
 
 {% block customcss %}
-    <link rel="stylesheet" href="{{ asset('Resources/customscss/salestage.css') }}">
     <link rel="stylesheet" href="{{ asset('Resources/slider/css/bootstrap-slider.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('Resources/datepicker/css/bootstrap-datepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('Resources/zebra/css/default.css') }}">
 {% endblock %}
 {% block descripcion %}
      <div class="col-md-6 col-sm-8">
@@ -13,10 +14,7 @@
      </div>    
 {% endblock %}
 {% block acciones %}
-    <div class="col-md-6 col-sm-4">
-        <button id="btnAdd" data-loading-text="loading..." autocomplete="off" class="btnAdd btn btn-sm btn-primary btn-flat pull-right">Nueva venta</button>
-        <button id="btnRegresar" class="btn btn-sm btn-default pull-right hide">Regresar</button>
-    </div>
+    <div class="col-md-6 col-sm-4"></div>
 {% endblock acciones %}
 
 {% block navegacion %}
@@ -25,5 +23,78 @@
 {% endblock %}
 
 {% block contenido %}
-    
+    <div id="filtroReporte" class="col-sm-12 col-xs-12 {% if not consolidado %} hidden {% endif %}" style="margin-bottom: 15px;">
+        <div class="pull-right">
+            <div class="row">
+                <div class="btn-group">
+                    <div class='input-daterange input-group date' id='datetimepicker6'>
+                        <input id="fecha-inicio" type='text' class="form-control input-sm" placeholder="Fecha de inicio..."/>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <div class='input-daterange input-group date' id='datetimepicker7'>
+                        <input id="fecha-fin" type='text' class="form-control input-sm" placeholder="Fecha de fin..."/>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-sm">                    
+                    <button id="filtrar" data-toggle="tooltip" data-container="body" title="Buscar" class="btn btn-default datatables1-actions opciones" role="button">
+                       Buscar
+                    </button>
+                </div>            
+                <div class="btn-group btn-group-sm">                    
+                    <button id="exportar-pdf" data-toggle="tooltip" data-container="body" title="Exportar a PDF" class="btn btn-default datatables1-actions opciones" role="button">
+                        <i class="fa fa-file-pdf-o"></i><a href=""> </a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+          
+    <div id="consolidado" class="col-sm-offset-1 col-sm-10 col-xs-12">
+        <table id="ingresosmensuales" class="mdl-data-table table-hover no-margin" width="100%" cellspacing="0" style="text-align:left;">
+            <thead id ="head">
+                <tr role="row">
+                    <th style="text-align: center;" >Mes / Año</th>
+                    <th style="text-align: center;" >Ventas en linea ($)</th>
+                    <th style="text-align: center;">Ventas en tienda ($)</th>
+                    <th style="text-align: center;">Total de ventas ($)</th>
+                </tr>
+            </thead>
+            <tbody id="tabla">
+                {% set data = 1 %}
+                {% set online = 0 %}
+                {% set venta = 0 %}
+                {% set total = 0 %}
+                {% for row in consolidado %}
+                    {% set online = online + row.online %}
+                    {% set venta = venta  + row.venta %}
+                    {% set total = total + row.total %}
+                    
+                    <tr>
+                        <td style="text-align: left;">{{ row.mes }} / {{ row.anio }}</td>
+                        <td>{% if row.online %}{{ row.online }}{% else %} 0.00{% endif %}</td>
+                        <td>{% if row.venta %}{{ row.venta }}{% else %}0.00{% endif %}</td>
+                        <td>{% if row.total %}{{ row.total }}{% else %}0.00{% endif %}</td>
+                    </tr>
+                {% else %}
+                    {% set data = 0 %}
+                    <tr><td style="text-align: center;" colspan="4">No hay datos</td></tr>
+                {% endfor %}
+                
+                {% if data == 1 %}
+                    <tr>
+                        <td style="text-align: left; font-weight: bold;">TOTAL</td>
+                        <td style="text-align: right; font-weight: bold;">{% if online != 0 %}{{ online }}{% else %}0.00{% endif %}</td>
+                        <td style="text-align: right; font-weight: bold;">{% if venta != 0 %}{{ venta }}{% else %}0.00{% endif %}</td>
+                        <td style="text-align: right; font-weight: bold;">{% if total != 0 %}{{ total }}{% else %}0.00{% endif %}</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>  
 {% endblock %}    
+{% block js_extend %}
+    <script type="text/javascript" src="{{ asset('Resources/zebra/javascript/zebra_datepicker.js') }}"></script>     
+    <script type="text/javascript" src="{{ asset('Resources/animations/reportes/ingresosventa.js') }}"></script>      
+{% endblock %}      

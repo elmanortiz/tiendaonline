@@ -41,7 +41,17 @@ class VentaTiendaController extends Controller
         $busqueda = $request->query->get('search');
         
         $em = $this->getDoctrine()->getEntityManager();
-        $rowsTotal = $em->getRepository('TiendaEcommerceBundle:OrdenCreada')->findAll();
+        //$rowsTotal = $em->getRepository('TiendaEcommerceBundle:OrdenCreada')->findAll();
+        
+        $sql = "select DATE_FORMAT(ped.fecha_registro, '%d/%m/%Y %h:%i:%s %p') as fecha, sum((ped.precio * ped.cantidad)) as total, "
+                . "ped.id_venta as referencia, CONCAT(cli.nombre, ' ', cli.apellido) as cliente "
+                . "from orden_creada ped inner join cliente cli on ped.cliente_id = cli.id "
+                . "where ped.tipo_orden = 2 "
+                . "group by ped.id_venta ";
+
+        $stm = $this->container->get('database_connection')->prepare($sql);
+        $stm->execute();
+        $rowsTotal = $stm->fetchAll();
         
         $row['draw']=$draw++;  
         $row['recordsTotal'] = count($rowsTotal);
@@ -226,62 +236,83 @@ class VentaTiendaController extends Controller
                 if ($id!='') {
                     
                 } else {
-                    if($registroCliente == 0) {
-                        $cliente = new Cliente();
-                        
-                        $cliente->setNombre($nombreCliente);
-                        $cliente->setApellido($apellidoCliente);
-                        $cliente->setEmail($correoCliente);
-                        $cliente->setTelefono($telefonoCliente);
-                        $cliente->setEstado(1);
-                        
-                        $em->persist($cliente);
-                        $em->flush();
-                    } else {
-                        $cliente = $em->getRepository('TiendaEcommerceBundle:Cliente')->find($clienteId);
-                    }
-                    
-                    $tipoOrden = $em->getRepository('TiendaEcommerceBundle:TipoOrden')->find(2);
-                    
-                    $sql = "select max(prod.id_venta) as id from orden_creada prod where prod.tipo_orden = 2";
-                    $stm = $this->container->get('database_connection')->prepare($sql);
-                    $stm->execute();
-                    $venta = $stm->fetchAll();
-                    
-                    if($venta[0]['id']){
-                        $corr = intval($venta[0]['id']) + 1;
-                    } else {
-                        $corr = 1;
-                    }
-                    
+                    $hayExistencias = 1;
                     foreach ($productoArray as $key => $value) {
-                        $ordenCreada = new OrdenCreada();
                         $producto = $em->getRepository('TiendaEcommerceBundle:Producto')->find($value);
+                        $stock = $producto->getStock();
                         
-                        $sql = "select col.nombre from color_producto cpro inner join color col on cpro.color_id = col.id where cpro.producto_id = " . $producto->getId();
+                        if(($stock - $cantidadArray[$key]) < 0) {
+                            $hayExistencias = 0;
+                        }
+                        
+                    }
+                    
+                    if($hayExistencias == 1) {
+                        if($registroCliente == 0) {
+                            $cliente = new Cliente();
+
+                            $cliente->setNombre($nombreCliente);
+                            $cliente->setApellido($apellidoCliente);
+                            $cliente->setEmail($correoCliente);
+                            $cliente->setTelefono($telefonoCliente);
+                            $cliente->setEstado(1);
+
+                            $em->persist($cliente);
+                            $em->flush();
+                        } else {
+                            $cliente = $em->getRepository('TiendaEcommerceBundle:Cliente')->find($clienteId);
+                        }
+
+                        $tipoOrden = $em->getRepository('TiendaEcommerceBundle:TipoOrden')->find(2);
+
+                        $sql = "select max(prod.id_venta) as id from orden_creada prod where prod.tipo_orden = 2";
                         $stm = $this->container->get('database_connection')->prepare($sql);
                         $stm->execute();
-                        $color = $stm->fetchAll();
-                        
-                        $ordenCreada->setFechaRegistro(new \DateTime('now'));
-                        $ordenCreada->setCliente($cliente);
-                        $ordenCreada->setProducto($producto);
-                        $ordenCreada->setNombreProd($producto->getNombre());
-                        $ordenCreada->setCantidad($cantidadArray[$key]);
-                        $ordenCreada->setTalla($tallaArray[$key]);
-                        $ordenCreada->setPrecio($precioArray[$key]);
-                        $ordenCreada->setTipoOrden($tipoOrden);
-                        $ordenCreada->setColor($color[0]['nombre']);
-                        $ordenCreada->setEstado(1);
-                        $ordenCreada->setIdVenta($corr);
-                        
-                        $em->persist($ordenCreada);
-                        $em->flush();                                                
+                        $venta = $stm->fetchAll();
+
+                        if($venta[0]['id']){
+                            $corr = intval($venta[0]['id']) + 1;
+                        } else {
+                            $corr = 1;
+                        }
+
+                        foreach ($productoArray as $key => $value) {
+                            $ordenCreada = new OrdenCreada();
+                            $producto = $em->getRepository('TiendaEcommerceBundle:Producto')->find($value);
+
+                            $sql = "select col.nombre from color_producto cpro inner join color col on cpro.color_id = col.id where cpro.producto_id = " . $producto->getId();
+                            $stm = $this->container->get('database_connection')->prepare($sql);
+                            $stm->execute();
+                            $color = $stm->fetchAll();
+
+                            $ordenCreada->setFechaRegistro(new \DateTime('now'));
+                            $ordenCreada->setCliente($cliente);
+                            $ordenCreada->setProducto($producto);
+                            $ordenCreada->setNombreProd($producto->getNombre());
+                            $ordenCreada->setCantidad($cantidadArray[$key]);
+                            $ordenCreada->setTalla($tallaArray[$key]);
+                            $ordenCreada->setPrecio($precioArray[$key]);
+                            $ordenCreada->setTipoOrden($tipoOrden);
+                            $ordenCreada->setColor($color[0]['nombre']);
+                            $ordenCreada->setEstado(1);
+                            $ordenCreada->setIdVenta($corr);
+                            $ordenCreada->setNumeroReferencia('AST' . $corr);
+
+                            $em->persist($ordenCreada);
+                            $em->flush();       
+                            
+                            $stock = $producto->getStock();
+                            $producto->setStock($stock - $cantidadArray[$key]);
+                            $em->merge($producto);
+                            $em->flush();
+                        }
+
+                        $serverSave = $this->getParameter('app.serverMsgSave');
+                        $data['msg'] = $serverSave;
+                        $data['id'] = $corr;
+                    } else {
+                        $data['error'] = 'Revise inventario de productos, existencia insuficiente de productos';
                     }
-                    
-                    $serverSave = $this->getParameter('app.serverMsgSave');
-                    $data['msg'] = $serverSave;
-                    $data['id'] = $corr;
                 }
                 
                 $response = new JsonResponse();

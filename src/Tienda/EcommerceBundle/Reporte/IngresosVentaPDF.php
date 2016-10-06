@@ -2,14 +2,23 @@
 
 namespace Tienda\EcommerceBundle\Reporte;
 
-include_once 'Resources/fpdf/fpdf.php';
-
-class IngresosVentaPDF extends FPDF
+class IngresosVentaPDF extends \FPDF
 {
-    // Cabecera de página
-    function Header()
-    {
+    function Header(){
         
+         $this->SetFont('Arial','B',15);
+        // Move to the right
+        $this->Image('Resources/src/img/logo.png', 180, 3, 30, 27);
+        $this->Line(20, 28.5, 210, 28.5);
+        $this->Line(20, 29, 210, 29);
+        
+        // Line break
+        $this->Ln(5);
+        
+        // Title
+        $this->Cell(100, 0, 'Reporte de ingresos totales', 0, 0);   
+        
+        $this->Ln(0);
     }
     
     // Pie de página
@@ -17,11 +26,16 @@ class IngresosVentaPDF extends FPDF
     {
         // Posición: a 1,5 cm del final
         $this->SetY(-15);
+        
         // Arial italic 8
-        $this->SetFont('Arial', 'I', 8);
+        $this->SetFont('Times', 'I', 8);
+        
+        $this->Line(20, 264.5, 210, 264.5);
+        $this->Line(20, 265, 210, 265);
+        
         // Número de página
         $this->Cell(0, 10, 'ARIASTORE', 0, 0, 'C');
-        $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+        $this->Cell(0, 10, utf8_decode('Pág. '.$this->PageNo()).'/{nb}', 0, 0, 'C');
     }
     
     function SetWidths($w)
