@@ -234,7 +234,9 @@ class VentaTiendaController extends Controller
                 $precioArray = $parameters['precio'];
                 
                 if ($id!='') {
-                    
+                    $ventaTienda = $em->getRepository('TiendaEcommerceBundle:OrdenCreada')->findBy(array('idVenta' => $id));
+                    var_dump($ventaTienda);
+                    die();
                 } else {
                     $hayExistencias = 1;
                     foreach ($productoArray as $key => $value) {
@@ -243,8 +245,7 @@ class VentaTiendaController extends Controller
                         
                         if(($stock - $cantidadArray[$key]) < 0) {
                             $hayExistencias = 0;
-                        }
-                        
+                        }                        
                     }
                     
                     if($hayExistencias == 1) {

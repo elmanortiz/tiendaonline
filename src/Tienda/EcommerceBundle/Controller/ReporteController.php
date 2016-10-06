@@ -45,7 +45,10 @@ class ReporteController extends Controller
                 . "year(ord.fecha_registro) as anio, "
                 . "(case p.tven when (p.tven is null) then 0 else p.tven end) online, "
                 . "(case s.tven when (s.tven is null) then 0 else s.tven end) venta, "
-                . "(case r.tven when (r.tven is null) then 0 else r.tven end) total "
+                . "(case p.tven or s.tven when (p.tven is null and s.tven is not null) then s.tven "
+                    . "when (s.tven is null and p.tven is not null) then p.tven "
+                    . "when (s.tven is not null and p.tven is not null) then (p.tven + s.tven) "
+                    . "else 0 end) total "
                 . "FROM orden_creada ord "
                 . "LEFT JOIN ( "
                     . "SELECT month(o1.fecha_registro) mes, year(o1.fecha_registro) as anio, "
@@ -61,12 +64,12 @@ class ReporteController extends Controller
                     . "WHERE o2.tipo_orden = 2 "
                     . "GROUP BY month(o2.fecha_registro), year(o2.fecha_registro) "
                 . ") s ON month(ord.fecha_registro) = s.mes and year(ord.fecha_registro) = s.anio "
-                . "LEFT JOIN  ( "
-                    . "SELECT month(o3.fecha_registro) mes, year(o3.fecha_registro) as anio, "
-                    . "SUM(o3.cantidad  * o3.precio) tven "
-                    . "FROM orden_creada o3 "
-                    . "GROUP BY month(o3.fecha_registro), year(o3.fecha_registro) "
-                . ") r ON month(ord.fecha_registro) = r.mes and year(ord.fecha_registro) = r.anio "
+//                . "LEFT JOIN  ( "
+//                    . "SELECT month(o3.fecha_registro) mes, year(o3.fecha_registro) as anio, "
+//                    . "SUM(o3.cantidad  * o3.precio) tven "
+//                    . "FROM orden_creada o3 "
+//                    . "GROUP BY month(o3.fecha_registro), year(o3.fecha_registro) "
+//                . ") r ON month(ord.fecha_registro) = r.mes and year(ord.fecha_registro) = r.anio "
                 . "where ord.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) "
                 . "group by month(ord.fecha_registro), year(ord.fecha_registro) "
                 . "order by year(ord.fecha_registro), month(ord.fecha_registro)";
@@ -116,7 +119,10 @@ class ReporteController extends Controller
                     . "year(ord.fecha_registro) as anio, "
                     . "(case p.tven when (p.tven is null) then 0 else p.tven end) online, "
                     . "(case s.tven when (s.tven is null) then 0 else s.tven end) venta, "
-                    . "(case r.tven when (r.tven is null) then 0 else r.tven end) total "
+                    . "(case p.tven or s.tven when (p.tven is null and s.tven is not null) then s.tven "
+                        . "when (s.tven is null and p.tven is not null) then p.tven "
+                        . "when (s.tven is not null and p.tven is not null) then (p.tven + s.tven) "
+                        . "else 0 end) total "
                     . "FROM orden_creada ord "
                     . "LEFT JOIN ( "
                         . "SELECT month(o1.fecha_registro) mes, year(o1.fecha_registro) as anio, "
@@ -134,13 +140,13 @@ class ReporteController extends Controller
                         . "and o2.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o2.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
                         . "GROUP BY month(o2.fecha_registro), year(o2.fecha_registro) "
                     . ") s ON month(ord.fecha_registro) = s.mes and year(ord.fecha_registro) = s.anio "
-                    . "LEFT JOIN  ( "
-                        . "SELECT month(o3.fecha_registro) mes, year(o3.fecha_registro) as anio, "
-                        . "SUM(o3.cantidad  * o3.precio) tven "
-                        . "FROM orden_creada o3     "
-                        . "where o3.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o3.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
-                        . "GROUP BY month(o3.fecha_registro), year(o3.fecha_registro) "
-                    . ") r ON month(ord.fecha_registro) = r.mes and year(ord.fecha_registro) = r.anio "
+//                    . "LEFT JOIN  ( "
+//                        . "SELECT month(o3.fecha_registro) mes, year(o3.fecha_registro) as anio, "
+//                        . "SUM(o3.cantidad  * o3.precio) tven "
+//                        . "FROM orden_creada o3     "
+//                        . "where o3.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o3.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
+//                        . "GROUP BY month(o3.fecha_registro), year(o3.fecha_registro) "
+//                    . ") r ON month(ord.fecha_registro) = r.mes and year(ord.fecha_registro) = r.anio "
                     . "where ord.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and ord.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
                     . "group by month(ord.fecha_registro), year(ord.fecha_registro) "
                     . "order by year(ord.fecha_registro), month(ord.fecha_registro)";
@@ -210,7 +216,10 @@ class ReporteController extends Controller
                 . "year(ord.fecha_registro) as anio, "
                 . "(case p.tven when (p.tven is null) then 0 else p.tven end) online, "
                 . "(case s.tven when (s.tven is null) then 0 else s.tven end) venta, "
-                . "(case r.tven when (r.tven is null) then 0 else r.tven end) total "
+                . "(case p.tven or s.tven when (p.tven is null and s.tven is not null) then s.tven "
+                    . "when (s.tven is null and p.tven is not null) then p.tven "
+                    . "when (s.tven is not null and p.tven is not null) then (p.tven + s.tven) "
+                    . "else 0 end) total "
                 . "FROM orden_creada ord "
                 . "LEFT JOIN ( "
                     . "SELECT month(o1.fecha_registro) mes, year(o1.fecha_registro) as anio, "
@@ -236,18 +245,18 @@ class ReporteController extends Controller
                     $sql.= "and o2.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) ";
                 }                
             $sql.= "GROUP BY month(o2.fecha_registro), year(o2.fecha_registro) "
-                . ") s ON month(ord.fecha_registro) = s.mes and year(ord.fecha_registro) = s.anio "
-                . "LEFT JOIN  ( "
-                    . "SELECT month(o3.fecha_registro) mes, year(o3.fecha_registro) as anio, "
-                    . "SUM(o3.cantidad  * o3.precio) tven "
-                    . "FROM orden_creada o3 ";                
-                if($txtfechaInicio != "" && $txtfechaFin != ""){
-                    $sql.= "where o3.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o3.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
-                } else {
-                    $sql.= "where o3.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) ";
-                }                
-            $sql.= "GROUP BY month(o3.fecha_registro), year(o3.fecha_registro) "
-               . ") r ON month(ord.fecha_registro) = r.mes and year(ord.fecha_registro) = r.anio "; 
+                . ") s ON month(ord.fecha_registro) = s.mes and year(ord.fecha_registro) = s.anio ";
+//                . "LEFT JOIN  ( "
+//                    . "SELECT month(o3.fecha_registro) mes, year(o3.fecha_registro) as anio, "
+//                    . "SUM(o3.cantidad  * o3.precio) tven "
+//                    . "FROM orden_creada o3 ";                
+//                if($txtfechaInicio != "" && $txtfechaFin != ""){
+//                    $sql.= "where o3.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o3.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
+//                } else {
+//                    $sql.= "where o3.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) ";
+//                }                
+//            $sql.= "GROUP BY month(o3.fecha_registro), year(o3.fecha_registro) "
+//               . ") r ON month(ord.fecha_registro) = r.mes and year(ord.fecha_registro) = r.anio "; 
                
            if($txtfechaInicio != "" && $txtfechaFin != ""){
                 $sql.= "where ord.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and ord.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
@@ -335,7 +344,10 @@ class ReporteController extends Controller
         $sql = "SELECT cat.nombre categoria, "
                 . "(case p.tven when (p.tven is null) then 0 else p.tven end) online, "
                 . "(case s.tven when (s.tven is null) then 0 else s.tven end) venta, "
-                . "(case r.tven when (r.tven is null) then 0 else r.tven end) total "
+                . "(case p.tven or s.tven when (p.tven is null and s.tven is not null) then s.tven "
+                    . "when (s.tven is null and p.tven is not null) then p.tven "
+                    . "when (s.tven is not null and p.tven is not null) then (p.tven + s.tven) "
+                    . "else 0 end) total "
                 . "FROM orden_creada ord "
                 . "INNER JOIN producto pro ON ord.producto = pro.id "
                 . "INNER JOIN categoria cat ON pro.categoria_id = cat.id "
@@ -353,13 +365,13 @@ class ReporteController extends Controller
                     . "WHERE o2.tipo_orden = 2 and o2.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) "
                     . "GROUP BY cat2.id "
                 . ") s ON cat.id = s.catid "
-                . "LEFT JOIN  ( "
-                    . "SELECT cat3.id catid, SUM(o3.cantidad  * o3.precio) tven "
-                    . "FROM orden_creada o3 INNER JOIN producto pro3 ON o3.producto = pro3.id "
-                        . "INNER JOIN categoria cat3 ON pro3.categoria_id = cat3.id "
-                    . "WHERE o3.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) "
-                    . "GROUP BY cat3.id "
-                . ") r ON cat.id = r.catid "
+//                . "LEFT JOIN  ( "
+//                    . "SELECT cat3.id catid, SUM(o3.cantidad  * o3.precio) tven "
+//                    . "FROM orden_creada o3 INNER JOIN producto pro3 ON o3.producto = pro3.id "
+//                        . "INNER JOIN categoria cat3 ON pro3.categoria_id = cat3.id "
+//                    . "WHERE o3.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) "
+//                    . "GROUP BY cat3.id "
+//                . ") r ON cat.id = r.catid "
                 . "where ord.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) "
                 . "group by cat.id "
                 . "order by cat.id";
@@ -395,7 +407,10 @@ class ReporteController extends Controller
             $sql = "SELECT cat.nombre categoria, "
                 . "(case p.tven when (p.tven is null) then 0 else p.tven end) online, "
                 . "(case s.tven when (s.tven is null) then 0 else s.tven end) venta, "
-                . "(case r.tven when (r.tven is null) then 0 else r.tven end) total "
+                . "(case p.tven or s.tven when (p.tven is null and s.tven is not null) then s.tven "
+                    . "when (s.tven is null and p.tven is not null) then p.tven "
+                    . "when (s.tven is not null and p.tven is not null) then (p.tven + s.tven) "
+                    . "else 0 end) total "
                 . "FROM orden_creada ord "
                 . "INNER JOIN producto pro ON ord.producto = pro.id "
                 . "INNER JOIN categoria cat ON pro.categoria_id = cat.id "
@@ -415,13 +430,13 @@ class ReporteController extends Controller
                     . "and o2.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o2.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
                     . "GROUP BY cat2.id "
                 . ") s ON cat.id = s.catid "
-                . "LEFT JOIN  ( "
-                    . "SELECT cat3.id catid, SUM(o3.cantidad  * o3.precio) tven "
-                    . "FROM orden_creada o3 INNER JOIN producto pro3 ON o3.producto = pro3.id "
-                        . "INNER JOIN categoria cat3 ON pro3.categoria_id = cat3.id "
-                    . "WHERE o3.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o3.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
-                    . "GROUP BY cat3.id "
-                . ") r ON cat.id = r.catid "
+//                . "LEFT JOIN  ( "
+//                    . "SELECT cat3.id catid, SUM(o3.cantidad  * o3.precio) tven "
+//                    . "FROM orden_creada o3 INNER JOIN producto pro3 ON o3.producto = pro3.id "
+//                        . "INNER JOIN categoria cat3 ON pro3.categoria_id = cat3.id "
+//                    . "WHERE o3.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o3.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
+//                    . "GROUP BY cat3.id "
+//                . ") r ON cat.id = r.catid "
                 . "group by cat.id order by cat.id";
 
             $stmt = $em->getConnection()->prepare($sql);
@@ -474,7 +489,10 @@ class ReporteController extends Controller
         $sql = "SELECT cat.nombre categoria, "
                 . "(case p.tven when (p.tven is null) then 0 else p.tven end) online, "
                 . "(case s.tven when (s.tven is null) then 0 else s.tven end) venta, "
-                . "(case r.tven when (r.tven is null) then 0 else r.tven end) total "
+                . "(case p.tven or s.tven when (p.tven is null and s.tven is not null) then s.tven "
+                    . "when (s.tven is null and p.tven is not null) then p.tven "
+                    . "when (s.tven is not null and p.tven is not null) then (p.tven + s.tven) "
+                    . "else 0 end) total "
                 . "FROM orden_creada ord "
                 . "INNER JOIN producto pro ON ord.producto = pro.id "
                 . "INNER JOIN categoria cat ON pro.categoria_id = cat.id "
@@ -483,12 +501,12 @@ class ReporteController extends Controller
                     . "FROM orden_creada o1 INNER JOIN producto pro1 ON o1.producto = pro1.id "
                         . "INNER JOIN categoria cat1 ON pro1.categoria_id = cat1.id INNER JOIN shipping shi ON o1.shipping = shi.id "
                     . "WHERE o1.tipo_orden = 1 ";
-                if($txtfechaInicio != "" && $txtfechaFin != ""){
-                     $sql.= "and o1.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o1.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
-                 } else {
-                     $sql.= "and o1.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) ";
-                 }                            
-                $sql.= "GROUP BY cat1.id "
+            if($txtfechaInicio != "" && $txtfechaFin != ""){
+                 $sql.= "and o1.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o1.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
+             } else {
+                 $sql.= "and o1.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) ";
+             }                            
+            $sql.= "GROUP BY cat1.id "
                 . ") p ON cat.id = p.catid "
                 . "LEFT JOIN  ( "
                     . "SELECT cat2.id catid, SUM(o2.cantidad  * o2.precio) tven "
@@ -499,25 +517,27 @@ class ReporteController extends Controller
                      $sql.= "and o2.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o2.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
                  } else {
                      $sql.= "and o2.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) ";
+                     $txtfechaInicio = date('d/m/Y', strtotime('now -6 months'));
+                     $txtfechaFin = date('d/m/Y', strtotime('now'));                     
                  }  
                 $sql.= "GROUP BY cat2.id "
-                . ") s ON cat.id = s.catid "
-                . "LEFT JOIN  ( "
-                    . "SELECT cat3.id catid, "
-                        //. "(case o3.tipo_orden when 2 then SUM(o3.cantidad  * o3.precio) else (SUM(o3.cantidad  * o3.precio) + shi3.valor) end) as tven "
-                        . "SUM(o3.cantidad  * o3.precio) as tven "
-                    . "FROM orden_creada o3 INNER JOIN producto pro3 ON o3.producto = pro3.id "
-                        . "INNER JOIN categoria cat3 ON pro3.categoria_id = cat3.id ";
-                if($txtfechaInicio != "" && $txtfechaFin != ""){
-                     $sql.= "and o3.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o3.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
-                 } else {
-                     $sql.= "and o3.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) ";
-                     
-                     $txtfechaInicio = date('d/m/Y', strtotime('now -6 months'));
-                     $txtfechaFin = date('d/m/Y', strtotime('now'));
-                 }
-                    $sql.= "GROUP BY cat3.id "
-                . ") r ON cat.id = r.catid ";        
+                . ") s ON cat.id = s.catid ";
+//                . "LEFT JOIN  ( "
+//                    . "SELECT cat3.id catid, "
+//                        . "(case o3.tipo_orden when 2 then SUM(o3.cantidad  * o3.precio) else (SUM(o3.cantidad  * o3.precio) + shi3.valor) end) as tven "
+//                        . "SUM(o3.cantidad  * o3.precio) as tven "
+//                    . "FROM orden_creada o3 INNER JOIN producto pro3 ON o3.producto = pro3.id "
+//                        . "INNER JOIN categoria cat3 ON pro3.categoria_id = cat3.id ";
+//                if($txtfechaInicio != "" && $txtfechaFin != ""){
+//                     $sql.= "and o3.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o3.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
+//                 } else {
+//                     $sql.= "and o3.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) ";
+//                     
+//                     $txtfechaInicio = date('d/m/Y', strtotime('now -6 months'));
+//                     $txtfechaFin = date('d/m/Y', strtotime('now'));
+//                 }
+//                    $sql.= "GROUP BY cat3.id "
+//                . ") r ON cat.id = r.catid ";        
         
         $sql.= "group by cat.id order by cat.id";
 

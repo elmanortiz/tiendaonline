@@ -71,9 +71,9 @@
                     
                     <tr>
                         <td style="text-align: left;">{{ row.categoria }}</td>
-                        <td>{% if row.online %}{{ row.online }}{% else %} 0.00{% endif %}</td>
-                        <td>{% if row.venta %}{{ row.venta }}{% else %}0.00{% endif %}</td>
-                        <td>{% if row.total %}{{ row.total }}{% else %}0.00{% endif %}</td>
+                        <td>{% if row.online %}{{ row.online|number_format(2, '.', ',') }}{% else %} 0.00{% endif %}</td>
+                        <td>{% if row.venta %}{{ row.venta|number_format(2, '.', ',') }}{% else %}0.00{% endif %}</td>
+                        <td>{% if row.total %}{{ row.total|number_format(2, '.', ',') }}{% else %}0.00{% endif %}</td>
                     </tr>
                 {% else %}
                     {% set data = 0 %}
@@ -82,9 +82,9 @@
                 {% if data == 1 %}
                     <tr>
                         <td style="text-align: left; font-weight: bold;">TOTAL</td>
-                        <td style="text-align: right; font-weight: bold;">{% if online != 0 %}{{ online }}{% else %}0.00{% endif %}</td>
-                        <td style="text-align: right; font-weight: bold;">{% if venta != 0 %}{{ venta }}{% else %}0.00{% endif %}</td>
-                        <td style="text-align: right; font-weight: bold;">{% if total != 0 %}{{ total }}{% else %}0.00{% endif %}</td>
+                        <td style="text-align: right; font-weight: bold;">{% if online != 0 %}{{ online|number_format(2, '.', ',') }}{% else %}0.00{% endif %}</td>
+                        <td style="text-align: right; font-weight: bold;">{% if venta != 0 %}{{ venta|number_format(2, '.', ',') }}{% else %}0.00{% endif %}</td>
+                        <td style="text-align: right; font-weight: bold;">{% if total != 0 %}{{ total|number_format(2, '.', ',') }}{% else %}0.00{% endif %}</td>
                     </tr>
                 {% endif %}
             </tbody>

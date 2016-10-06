@@ -164,9 +164,9 @@ $(document).ready(function() {
                         i=0;
                         contador=0;
                         
-                        $("#sCliente").select2('val', data.venta[0].clienteid, true).trigger('change');
+                        //$("#sCliente").select2('val', data.venta[0].clienteid, true).trigger('change');
                         
-                        //$('#sCliente').val(data.venta[0].clienteid).change().trigger("change");
+                        $('#sCliente').val(data.venta[0].clienteid).change().trigger("change");
                         $('#txtId').val(data.venta[0].id_venta);
                         
                         $(data.venta).each(function( index, value ) {                
