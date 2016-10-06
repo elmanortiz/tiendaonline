@@ -257,23 +257,27 @@ class ProductoController extends Controller
             $producto->setMensaje($parameters['msjexistencia']);
         }
         
+        $idtipo = $parameters['tipo'];
         $idcat = $parameters['categoria'];
         
         $catprod = $em->getRepository('TiendaEcommerceBundle:Categoria')->find($idcat);        
+        $producto->setTipo($idtipo);
         $producto->setCategoria($catprod);
         $em->persist($producto);
         $em->flush();
         
         //Insertando datos en la tabla de atributos del producto
-        $n=  count($parameters['atributo']);
-        for($i=1;$i<$n;$i++){
-            $atributoproducto->setNombre($parameters['atributo'][$i]);
-            $atributoproducto->setPorcentaje($parameters['porcentaje'][$i]);
-            $atributoproducto->setProducto($producto);//Id producto
-            $em->persist($atributoproducto);
-            $em->flush();            
-            unset($atributoproducto);
-            $atributoproducto = new Atributoproducto();
+        if(isset($parameters['atributo'])){
+            $n=  count($parameters['atributo']);
+            for($i=1;$i<$n;$i++){
+                $atributoproducto->setNombre($parameters['atributo'][$i]);
+                $atributoproducto->setPorcentaje($parameters['porcentaje'][$i]);
+                $atributoproducto->setProducto($producto);//Id producto
+                $em->persist($atributoproducto);
+                $em->flush();            
+                unset($atributoproducto);
+                $atributoproducto = new Atributoproducto();
+            }
         }
                                                                       
         $path = $this->container->getParameter('photo.producto');
@@ -423,7 +427,7 @@ class ProductoController extends Controller
         $colores = $em->getRepository('TiendaEcommerceBundle:Color')->findBy(array('estado'=>1));                                                
         $tallas = $em->getRepository('TiendaEcommerceBundle:Talla')->findBy(array('estado'=>1)); 
         $categorias = $em->getRepository('TiendaEcommerceBundle:Categoria')->findBy(array('estado'=>1));
-                                
+                  
         return $this->render('producto/edit.html.twig', array(            
             'productos'=>$result_productos,
             'materiales'=>$result_materiales,

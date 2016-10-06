@@ -36,25 +36,39 @@
                         
                         {#<form id="newProduct" method="POST" action="path('inventariobeard_insertprod')" enctype="multipart/form-data">#}
                         {#<div class="container" style="margin-top: 0px;">#}
-                            <div class="row" style="margin-left: 5px;">
+                            <div class="row" style="margin-left: 5px;">                                                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="nombreEmpleado" id="t">Categoria</label>
                                         <select required class="form-control validateInput" id="categoria" name="categoria" placeholder=Categoria">
                                             <option value="0" selected style="margin-bottom: 10px;">Seleccione una categoria</option>                           
                                             {% for catprod in categoriaproducto %}
-                                                <option value="{{ catprod.id  }}">{{catprod.nombre }}</option>  
+                                                <option value="{{ catprod.id  }}" style="padding-right: 55px;">{{catprod.nombre }}</option>  
                                             {% endfor %}          
                                         </select>   
                                     </div>
-                                                                        
+                                </div>
+                                        
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nombreEmpleado" id="t">Tipo</label>
+                                        <select required class="form-control validateInput" id="tipo" name="tipo" placeholder="">
+                                            <option value="0" selected style="margin-bottom: 10px;">Seleccione un tipo</option>
+                                            <option value="1">Mujer</option>  
+                                            <option value="2">Hombre</option>  
+                                        </select>   
+                                    </div>
+                                </div>
                                     {#<label id="lasubcategoria" class="hiden">Subcategoria</label>#}
+                                                                          
+                                <div class="col-md-6">
                                     <div id="sc"></div>                                                                      
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Nombre de Producto</label> 
                                         <input id="nombreprod" name="nombreprod" type="text" class="form-control validateInput" id="exampleInputEmail1" placeholder="Nombre de Producto" />
                                     </div>
-
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Codigo de Referencia</label> 
                                         <input id="stock" name="codigo" type="text" class="form-control validateInput" placeholder="Codigo de Referencia" />
@@ -63,30 +77,35 @@
                                             <input id="codigo" name="codigo" type="text" class="form-control" id="exampleInputEmail1" placeholder="Codigo de Referencia" />
                                         </div>#}
                                     </div>
-                                    
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Precio Anterior:</label>
                                         <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
                                         <div class="input-group">
-                                            <div class="input-group-addon">$</div>
+                                            <div class="input-group-addon"><label>$</label></div>
                                             <input id="precioanterior" name="precioanterior" type="text" class="form-control validateInput" id="exampleInputEmail1" placeholder="Precio Anterior" />
                                         </div>
                                     </div>
-                                    
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Precio:</label>
                                         <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
                                         <div class="input-group">
-                                            <div class="input-group-addon">$</div>
+                                            <div class="input-group-addon"><label>$</label></div>
                                             <input id="precio" name="precio" type="text" class="form-control validateInput" id="exampleInputEmail1" placeholder="Precio" />
                                         </div>
                                     </div>
-                                    
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Descripcion del producto:</label>                                                                                
-                                            <textarea id="descripcion" name="descripcion" class="textarea" placeholder="Enter text ..." style="width: 100%; height: 200px" maxlength="300"></textarea>                                        
+                                        <label for="exampleInputEmail1">Existencias totales</label> 
+                                        <input id="stock" name="stock" type="text" class="form-control validateInput" placeholder="Cantidad total de productos actules + nuevos" />
                                     </div>
-                                                                        
+                                </div>  
+                                <div class="clearfix"></div> 
+                                    
                                     {#<div class="form-group">            
                                         <label for="exampleInputEmail1">Link de compra</label>
                                         <div class="input-group">
@@ -99,6 +118,7 @@
                                         <label for="exampleInputEmail1">Presentacion del producto</label> 
                                         <input id="presentacion" name="presentacion" type="text" class="form-control" placeholder="Presentacion" />
                                     </div>#}
+                                <div class="col-md-6">
                                     <label for="exampleInputEmail1">Colores (Elija un color)</label><br>
                                     <div class="form-group">
                                     {% for color in colores %}                                                                                                                                                                                                            
@@ -107,7 +127,8 @@
                                             <br>                                        
                                     {% endfor %}
                                     </div>
-                                    
+                                </div>
+                                <div class="col-md-6">
                                     <label for="exampleInputEmail1">Tallas (Elija al menos una talla)</label><br>
                                     <div class="form-group">
                                     {% for talla in tallas %}                                                                                                                                                                                                            
@@ -116,22 +137,24 @@
                                             <br>                                        
                                     {% endfor %}
                                     </div>
-                                    
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Existencias totales</label> 
-                                        <input id="stock" name="stock" type="text" class="form-control validateInput" placeholder="Cantidad total de productos actules + nuevos" />
+                                        <label for="exampleInputEmail1">Descripcion del producto:</label>                                                                                
+                                        <textarea id="descripcion" name="descripcion" class="textarea" placeholder="Enter text ..." style="width: 100%; height: 200px" maxlength="300"></textarea>                                        
                                     </div>
-                                    
+                                </div>
                                     {#<div class="form-group">                                                                                
                                         <label for="exampleInputEmail1">Destacar este producto</label><br>
                                         <input id="destacado" name="destacado" type="checkbox" value="1">
                                     </div>#}                                                                       
-                                    
+                                <div class="col-md-6">    
                                     <div class="form-group">                                                                                
                                         <label for="exampleInputEmail1">Mostrar como no disponible</label><br>
                                         <input id="disponibilidad" name="disponibilidad" type="checkbox" value="1">
                                     </div>
-                                    
+                                </div>
+                                <div class="col-md-6">    
                                     <div id="nodispo" class="form-group" style="display: none;">
                                         <label for="exampleInputEmail1">Mensaje por falta de existencias</label> 
                                         <input id="stock" name="msjexistencia" type="text" class="form-control" placeholder="Ejemplo: Disponibles la proxima semana" />
@@ -139,19 +162,14 @@
                                 </div>
                                     
 
-                                <div class="col-md-6">
+                                <!--div class="col-md-6">
                                     <p class="text-center" style="margin-bottom: 0px;">AGREGAR O QUITAR MATERIAL DE PRODUCTO</p>
-                                    <!--<p class="pull-left"><a href="#"><button type="button" class="btn btn-default">Add</button></a></p>-->
-                                    <!--<p class="pull-right"><a href="#"><button type="button" class="btn btn-default">Delete</button></a></p>-->
-
+                                    
                                     <table class="table" id="dataTable">
                                         <p class="pull-left"><input  type="button" class="btn btn-success " name="otro" id="otro" value="Agregar" onclick="addRow('dataTable');"/></p>
                                         <p class="pull-right"><input type="button" class="btn btn-danger" name="borrar" id="borrar" value="Quitar" onclick="deleteRow('dataTable');"/></p>
                                         
-                                        <thead>
-                                            <!-- <tr>-->  
-                                            <!-- <td><input type="text" class="form-control" id="cantidad[]" name ="cantidad[]" placeholder="Ingrese la cantidad" onkeypress="return validNumber(event)"></td>-->
-                                            <!--</tr>-->
+                                        <thead>                                           
                                         </thead>
                                         <tbody>                                                                                        
                                             <tr class="hidden">
@@ -161,8 +179,10 @@
                                             </tr>                                                                                        
                                         </tbody>
                                     </table>
-                                </div>
+                                </div-->
+                                    
                                 <div class="clearfix"></div>
+                                <hr>
                                 <div class="col-md-6"><label for="exampleInputEmail1">Agregar Fotos</label></div>
 
                                 <!-- <input type="submit"  class="btn btn-default" value="Guardar"> -->
@@ -215,8 +235,8 @@
                             <textarea id="ingrediente" name="ingrediente" class="textarea" placeholder="Enter text ..." style="width: 100%; height: 400px"></textarea>
                         </div>    
                     </div>#}
-                
-                <p id="enviar" class="text-center"><button type="button" class="btn btn-default" style="margin-top: 20px;">Ingresar Producto</button></p>    
+                <div class="col-md-12" style="padding: 0px;"><hr></div> 
+                <div class="col-md-12 text-right"><p id="enviar" class=""><button type="button" class="btn btn-default" style="margin-top: 10px; background-color: #262626; color: #FFF;">Ingresar Producto</button></p></div>    
                 <p class="text-center"><button id="submit" type="submit" class="btn btn-default" style="margin-top: 10px; display: none;">Ingresar Producto</button></p>
 
                 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

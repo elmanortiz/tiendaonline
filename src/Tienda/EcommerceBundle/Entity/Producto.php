@@ -112,6 +112,14 @@ class Producto
      * @ORM\Column(name="stock", type="integer", nullable=true)
      */
     private $stock;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tipo", type="integer", nullable=true)
+     */
+    private $tipo;
+    
 
     /**
      * @var \Categoria
@@ -201,7 +209,28 @@ class Producto
     {
         return $this->precio;
     }
-    
+   
+   /**
+     * Set tipo
+     *
+     * @param string $tipo
+     * @return Producto
+     */
+    public function setTipo($tipo) {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string 
+     */
+    public function getTipo() {
+        return $this->tipo;
+    }
+   
     /**
      * Set descripcion
      *
