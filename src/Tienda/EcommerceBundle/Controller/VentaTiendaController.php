@@ -235,7 +235,14 @@ class VentaTiendaController extends Controller
                 
                 if ($id!='') {
                     $ventaTienda = $em->getRepository('TiendaEcommerceBundle:OrdenCreada')->findBy(array('idVenta' => $id));
-                    var_dump($ventaTienda);
+                    
+                    foreach ($ventaTienda as $key => $value) {
+                        $producto = $value->getProducto();                        
+                        $producto->setStock($producto->getStock() - $producto->getCantidad());
+                        
+                        var_dump($producto);
+                    }
+                    
                     die();
                 } else {
                     $hayExistencias = 1;

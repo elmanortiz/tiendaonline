@@ -5,12 +5,16 @@
     
     <div class="row">
  {% block descripcion %}
-			<div class="col-md-12">
-				<p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Producto</p>
-                                <p class="robo" style="font-weight: 300; font-size: 14px; height: 40px;">Ingreso de nuevo producto</p>
+			<div class="col-md-6 col-sm-8">
+				<p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Edición del producto</p>
+                                <p class="robo" style="font-weight: 300; font-size: 14px; height: 40px;">Se muestra y/o actualiza la información del producto</p>
 			</div>
  {% endblock%}
  {% block acciones %}
+     <div class="col-md-6 col-sm-4 text-right">
+        <a href="{{path('admin_producto_index')}}" ><button type="button" class="btn btn-default" style="margin-top: 0px; margin-bottom: 10px;">Atras</button></a>
+        <a href="{{path('admin_dashboard')}}" ><button type="button" class="btn btn-default" style="margin-top: 0px; margin-bottom: 10px;">Ir al Dashboard</button></a>
+    </div>
  {% endblock %}		
  </div>
 
@@ -22,7 +26,7 @@
             <div class="col-md-2" style="border-right: 1px solid #f3f3f3;">
                     <!-- Left Navigation -->
                     <ul style="list-style: none; padding: 0;">
-                        <a href="{{ path('admin_dashboard') }}" class="leftnava colorAnclas"><li class="leftnav left active">Menu<span class="pull-right right"></span></li></a>                       
+                        <a href="{{path('admin_producto_index')}}" class="leftnava colorAnclas"><li class="leftnav left active">Gestión productos<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
                     </ul>
             </div>
        {% endblock %}
@@ -30,7 +34,7 @@
 {% block cuerpo %}
     {{parent()}}
     <div class="col-md-10" style="margin-top: 0px;"> {#Cuerpo de la interfaz#}
-        <a href="{{path('admin_producto_index')}}" ><button type="button" class="btn btn-default" style="margin-top: 0px; margin-bottom: 10px;">Atras</button></a>
+        {#<a href="{{path('admin_producto_index')}}" ><button type="button" class="btn btn-default" style="margin-top: 0px; margin-bottom: 10px;">Atras</button></a>#}
                 <div class="row">
                     <form id="newProduct" method="POST" action="{{path('inventariotienda_editprod')}}" enctype="multipart/form-data">
                         <input name="idproducto" type="text" class="form-control validateInput" value="{{productos[0].id}}" style="display:none;" placeholder="Codigo de Referencia" />
