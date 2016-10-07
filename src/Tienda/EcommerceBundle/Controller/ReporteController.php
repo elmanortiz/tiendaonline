@@ -54,14 +54,14 @@ class ReporteController extends Controller
                     . "SELECT month(o1.fecha_registro) mes, year(o1.fecha_registro) as anio, "
                     . "SUM(o1.cantidad  * o1.precio) + shi.valor as tven "
                     . "FROM orden_creada o1 INNER JOIN shipping shi ON o1.shipping = shi.id "
-                    . "WHERE o1.tipo_orden = 1 "
+                    . "WHERE o1.tipo_orden = 1 and o1.estado = 0 "
                     . "GROUP BY month(o1.fecha_registro), year(o1.fecha_registro) "
                 . ") p ON month(ord.fecha_registro) = p.mes and year(ord.fecha_registro) = p.anio "
                 . "LEFT JOIN  ( "
                     . "SELECT month(o2.fecha_registro) mes, year(o2.fecha_registro) as anio, "
                     . "SUM(o2.cantidad  * o2.precio) tven "
                     . "FROM orden_creada o2     "
-                    . "WHERE o2.tipo_orden = 2 "
+                    . "WHERE o2.tipo_orden = 2 and o2.estado = 1 "
                     . "GROUP BY month(o2.fecha_registro), year(o2.fecha_registro) "
                 . ") s ON month(ord.fecha_registro) = s.mes and year(ord.fecha_registro) = s.anio "
 //                . "LEFT JOIN  ( "
@@ -128,7 +128,7 @@ class ReporteController extends Controller
                         . "SELECT month(o1.fecha_registro) mes, year(o1.fecha_registro) as anio, "
                         . "SUM(o1.cantidad  * o1.precio) + shi.valor as tven "
                         . "FROM orden_creada o1 INNER JOIN shipping shi ON o1.shipping = shi.id "
-                        . "WHERE o1.tipo_orden = 1 "
+                        . "WHERE o1.tipo_orden = 1 and o1.estado = 0 "
                         . "and o1.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o1.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
                         . "GROUP BY month(o1.fecha_registro), year(o1.fecha_registro) "
                     . ") p ON month(ord.fecha_registro) = p.mes and year(ord.fecha_registro) = p.anio "
@@ -136,7 +136,7 @@ class ReporteController extends Controller
                         . "SELECT month(o2.fecha_registro) mes, year(o2.fecha_registro) as anio, "
                         . "SUM(o2.cantidad  * o2.precio) tven "
                         . "FROM orden_creada o2     "
-                        . "WHERE o2.tipo_orden = 2 "
+                        . "WHERE o2.tipo_orden = 2 and o2.estado = 1 "
                         . "and o2.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o2.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
                         . "GROUP BY month(o2.fecha_registro), year(o2.fecha_registro) "
                     . ") s ON month(ord.fecha_registro) = s.mes and year(ord.fecha_registro) = s.anio "
@@ -225,7 +225,7 @@ class ReporteController extends Controller
                     . "SELECT month(o1.fecha_registro) mes, year(o1.fecha_registro) as anio, "
                     . "SUM(o1.cantidad  * o1.precio) + shi.valor as tven "
                     . "FROM orden_creada o1 INNER JOIN shipping shi ON o1.shipping = shi.id "
-                    . "WHERE o1.tipo_orden = 1 ";
+                    . "WHERE o1.tipo_orden = 1 and o1.estado = 0 ";
                 
                 if($txtfechaInicio != "" && $txtfechaFin != ""){
                     $sql.= "and o1.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o1.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
@@ -238,7 +238,7 @@ class ReporteController extends Controller
                     . "SELECT month(o2.fecha_registro) mes, year(o2.fecha_registro) as anio, "
                     . "SUM(o2.cantidad  * o2.precio) tven "
                     . "FROM orden_creada o2     "
-                    . "WHERE o2.tipo_orden = 2 ";                
+                    . "WHERE o2.tipo_orden = 2 and o2.estado = 1 ";                
                 if($txtfechaInicio != "" && $txtfechaFin != ""){
                     $sql.= "and o2.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o2.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
                 } else {
@@ -355,14 +355,14 @@ class ReporteController extends Controller
                     . "SELECT cat1.id catid, SUM(o1.cantidad  * o1.precio) + shi.valor as tven "
                     . "FROM orden_creada o1 INNER JOIN producto pro1 ON o1.producto = pro1.id "
                         . "INNER JOIN categoria cat1 ON pro1.categoria_id = cat1.id INNER JOIN shipping shi ON o1.shipping = shi.id "
-                    . "WHERE o1.tipo_orden = 1 and o1.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) " 
+                    . "WHERE o1.tipo_orden = 1 and o1.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) and o1.estado = 0 " 
                     . "GROUP BY cat1.id "
                 . ") p ON cat.id = p.catid "
                 . "LEFT JOIN  ( "
                     . "SELECT cat2.id catid, SUM(o2.cantidad  * o2.precio) tven "
                     . "FROM orden_creada o2 INNER JOIN producto pro2 ON o2.producto = pro2.id "
                         . "INNER JOIN categoria cat2 ON pro2.categoria_id = cat2.id "
-                    . "WHERE o2.tipo_orden = 2 and o2.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) "
+                    . "WHERE o2.tipo_orden = 2 and o2.fecha_registro > DATE_SUB(now(), INTERVAL 6 MONTH) and o2.estado = 1 "
                     . "GROUP BY cat2.id "
                 . ") s ON cat.id = s.catid "
 //                . "LEFT JOIN  ( "
@@ -418,7 +418,7 @@ class ReporteController extends Controller
                     . "SELECT cat1.id catid, SUM(o1.cantidad  * o1.precio) + shi.valor as tven "
                     . "FROM orden_creada o1 INNER JOIN producto pro1 ON o1.producto = pro1.id "
                         . "INNER JOIN categoria cat1 ON pro1.categoria_id = cat1.id INNER JOIN shipping shi ON o1.shipping = shi.id "
-                    . "WHERE o1.tipo_orden = 1 "
+                    . "WHERE o1.tipo_orden = 1 and o1.estado = 0 "
                     . "and o1.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o1.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
                     . "GROUP BY cat1.id "
                 . ") p ON cat.id = p.catid "
@@ -426,7 +426,7 @@ class ReporteController extends Controller
                     . "SELECT cat2.id catid, SUM(o2.cantidad  * o2.precio) tven "
                     . "FROM orden_creada o2 INNER JOIN producto pro2 ON o2.producto = pro2.id "
                         . "INNER JOIN categoria cat2 ON pro2.categoria_id = cat2.id "
-                    . "WHERE o2.tipo_orden = 2 "
+                    . "WHERE o2.tipo_orden = 2 and o2.estado = 1 "
                     . "and o2.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o2.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' "
                     . "GROUP BY cat2.id "
                 . ") s ON cat.id = s.catid "
@@ -500,7 +500,7 @@ class ReporteController extends Controller
                     . "SELECT cat1.id catid, SUM(o1.cantidad  * o1.precio) + shi.valor as tven "
                     . "FROM orden_creada o1 INNER JOIN producto pro1 ON o1.producto = pro1.id "
                         . "INNER JOIN categoria cat1 ON pro1.categoria_id = cat1.id INNER JOIN shipping shi ON o1.shipping = shi.id "
-                    . "WHERE o1.tipo_orden = 1 ";
+                    . "WHERE o1.tipo_orden = 1 and o1.estado = 0 ";
             if($txtfechaInicio != "" && $txtfechaFin != ""){
                  $sql.= "and o1.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o1.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
              } else {
@@ -512,7 +512,7 @@ class ReporteController extends Controller
                     . "SELECT cat2.id catid, SUM(o2.cantidad  * o2.precio) tven "
                     . "FROM orden_creada o2 INNER JOIN producto pro2 ON o2.producto = pro2.id "
                         . "INNER JOIN categoria cat2 ON pro2.categoria_id = cat2.id "
-                    . "WHERE o2.tipo_orden = 2 ";
+                    . "WHERE o2.tipo_orden = 2 and o2.estado = 1 ";
                 if($txtfechaInicio != "" && $txtfechaFin != ""){
                      $sql.= "and o2.fecha_registro >= '" .$fechaInicio[2] . "-" . $fechaInicio[1] . "-" . $fechaInicio[0] . "' and o2.fecha_registro <= '" .$fechaFin[2] . "-" . $fechaFin[1] . "-" . $fechaFin[0] . "' ";
                  } else {
@@ -562,7 +562,7 @@ class ReporteController extends Controller
         $venta = 0;
         $total = 0;
         foreach ($row['data'] as $key => $value) {
-            $data[$key][0] = $value['categoria'];
+            $data[$key][0] = utf8_decode($value['categoria']);
             
             if(!is_null($value['online'])) {
                 $data[$key][1] = $value['online'];

@@ -234,7 +234,7 @@ class CategoriaController extends Controller
         $busqueda = $request->query->get('search');
         
         $em = $this->getDoctrine()->getEntityManager();
-        $rowsTotal = $em->getRepository('TiendaEcommerceBundle:Categoria')->findAll();
+        $rowsTotal = $em->getRepository('TiendaEcommerceBundle:Categoria')->findAll(array('estado' => 1));
         
         $row['draw']=$draw++;  
         $row['recordsTotal'] = count($rowsTotal);
