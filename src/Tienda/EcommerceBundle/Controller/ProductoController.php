@@ -158,7 +158,7 @@ class ProductoController extends Controller
         $draw = $request->query->get('draw');
         $longitud = $request->query->get('length');
         $busqueda = $request->query->get('search');        
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $rowsTotal = $em->getRepository('TiendaEcommerceBundle:Producto')->findBy(array('estado'=>1));
 
         $row['draw'] = $draw++;
@@ -175,13 +175,13 @@ class ProductoController extends Controller
         $orderByText = "";
         switch (intval($orderBy)) {
             case 1:
-                $orderByText = "name";
+                $orderByText = "pac.nombre";
                 break;
             case 2:
-                $orderByText = "categoria";
+                $orderByText = "cat.nombre";
                 break;
-            case 4:
-                $orderByText = "stock";
+            case 3:
+                $orderByText = "pac.stock";
                 break;
         }
 
