@@ -47,7 +47,8 @@ class VentaTiendaController extends Controller
                 . "ped.id_venta as referencia, CONCAT(cli.nombre, ' ', cli.apellido) as cliente "
                 . "from orden_creada ped inner join cliente cli on ped.cliente_id = cli.id "
                 . "where ped.tipo_orden = 2 "
-                . "group by ped.id_venta ";
+                . "group by ped.id_venta "
+                . "order by ped.fecha_registro ";
 
         $stm = $this->container->get('database_connection')->prepare($sql);
         $stm->execute();
@@ -67,13 +68,13 @@ class VentaTiendaController extends Controller
         $orderByText="";
         switch(intval($orderBy)){
             case 0:
-                $orderByText = "cookie";
+                $orderByText = "ped.id_venta";
                 break;
             case 1:
-                $orderByText = "cliente";
+                $orderByText = "ped.fecha_registro";
                 break;
             case 2:
-                $orderByText = "direccion";
+                $orderByText = "cliente";
                 break;
             case 3:
                 $orderByText = "total";
@@ -174,7 +175,7 @@ class VentaTiendaController extends Controller
                     from talla_producto tp
                     inner join producto pro on tp.producto_id = pro.id
                     inner join talla tal on tp.talla_id = tal.id 
-                    where pro.id = ".$id." ";
+                    where pro.id = ".$id." and tal.estado = 1 ";
             
             $stm = $this->container->get('database_connection')->prepare($sql);
             $stm->execute();
@@ -223,7 +224,10 @@ class VentaTiendaController extends Controller
                 
                 $id = $parameters['id'];
                 $registroCliente = $parameters['cliente-opt'];
-                $clienteId = $parameters['sCliente'];
+                if(isset($parameters['sCliente'])){
+                    $clienteId = $parameters['sCliente'];
+                }
+                
                 $nombreCliente = $parameters['txtName'];
                 $apellidoCliente = $parameters['txtLastname'];
                 $correoCliente = $parameters['txtEmail'];
@@ -240,10 +244,10 @@ class VentaTiendaController extends Controller
                         $producto = $value->getProducto();                        
                         $producto->setStock($producto->getStock() - $producto->getCantidad());
                         
-                        var_dump($producto);
+                        //var_dump($producto);
                     }
                     
-                    die();
+                    //die();
                 } else {
                     $hayExistencias = 1;
                     foreach ($productoArray as $key => $value) {
@@ -329,7 +333,7 @@ class VentaTiendaController extends Controller
                                ));  
             
                 return $response; 
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if(method_exists($e,'getErrorCode')){
                     switch (intval($e->getErrorCode())){
                         case 2003: 
