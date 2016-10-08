@@ -267,7 +267,7 @@ class ShippingController extends Controller
         $orderByText="";
         switch(intval($orderBy)){
             case 0:
-                $orderByText = "depto";
+                $orderByText = "dep.nombre";
                 break;
             case 1:
                 $orderByText = "valor";

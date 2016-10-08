@@ -20,6 +20,13 @@ class TallaProducto
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="stock", type="integer", nullable=true)
+     */
+    private $stock;
 
     /**
      * @var \Talla
@@ -50,6 +57,29 @@ class TallaProducto
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+     * Set stock
+     *
+     * @param integer $stock
+     * @return Producto
+     */
+    public function setStock($stock)
+    {
+        $this->stock = $stock;
+
+        return $this;
+    }
+
+    /**
+     * Get stock
+     *
+     * @return integer 
+     */
+    public function getStock()
+    {
+        return $this->stock;
     }
 
     /**
