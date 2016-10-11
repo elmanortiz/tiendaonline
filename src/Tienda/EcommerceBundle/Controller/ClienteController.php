@@ -148,7 +148,7 @@ class ClienteController extends Controller
     {
         $busqueda = $request->query->get('q');
         
-        $sql = "select cli.id objid, distint(CONCAT(cli.nombre, ' ', cli.apellido)) as nombre  
+        $sql = "select cli.id objid, CONCAT(cli.nombre, ' ', cli.apellido) as nombre  
                 from cliente cli 
                 where CONCAT(upper(cli.nombre), ' ' , upper(cli.apellido)) LIKE upper('%".$busqueda."%') 
                 order by cli.id asc 

@@ -268,14 +268,20 @@ $(document).ready(function() {
             
             $('#txtName').removeClass('validateInput');
             $('#txtLastname').removeClass('validateInput');
-            $('#sCliente').addClass('validateSelect');
+            $('#txtEmail').removeClass('validateInput');
+            $('#txtPhone').removeClass('validateInput');
             
+            $('#sCliente').addClass('validateSelect');
+                        
         } else {
             $('#nuevoCliente').removeClass('hidden');
             $('#existente').addClass('hidden');
             
             $('#txtName').addClass('validateInput');
             $('#txtLastname').addClass('validateInput');
+            $('#txtEmail').addClass('validateInput');
+            $('#txtPhone').addClass('validateInput');
+            
             $('#sCliente').removeClass('validateSelect');
         }
     });
@@ -396,7 +402,7 @@ $(document).ready(function() {
                     $talla.html(''); 
                     
                     $.each(data.data, function( key, value ) {
-                        optionsAsString += "<option value='" + value.talla + "'>" + value.talla + "</option>";
+                        optionsAsString += "<option value='" + value.tallaid + "'>" + value.talla + "</option>";
                     });
                     
                     $talla.append(optionsAsString);
