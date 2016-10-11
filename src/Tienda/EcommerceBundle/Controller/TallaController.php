@@ -83,11 +83,28 @@ class TallaController extends Controller
                 
                 if ($id!='') {
                     $talla = $em->getRepository('TiendaEcommerceBundle:Talla')->find($id);
-                    $talla->setNombre($nombreTalla);
-
+                    $tallaProducto = $em->getRepository('TiendaEcommerceBundle:TallaProducto')->findBy(array('talla_id' => $talla));
+                    
+                    $talla->setEstado(0);
                     $em->merge($talla);
                     $em->flush();
-
+                    
+                    $tallaNew = new Talla();
+                    $tallaNew->setNombre($nombreTalla);
+                    $tallaNew->setEstado(1);
+                    $em->persist($tallaNew);
+                    $em->flush();
+                    
+                    foreach ($tallaProducto as $key => $value) {
+                        $tallaProd = new \Tienda\EcommerceBundle\Entity\TallaProducto();
+                        $tallaProd->setProducto($value->getProducto());
+                        $tallaProd->setTalla($tallaNew);
+                        $tallaProd->setStock($value->getStock());
+                    
+                        $em->persist($tallaProd);
+                        $em->flush();     
+                    }
+                    
                     $serverUpdate = $this->getParameter('app.serverMsgUpdate');
                     $data['msg']=$serverUpdate; 
                     $data['id']=$talla->getId();
@@ -114,7 +131,7 @@ class TallaController extends Controller
                                ));  
             
                 return $response; 
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if(method_exists($e,'getErrorCode')){
                     switch (intval($e->getErrorCode())){
                         case 2003: 
@@ -234,7 +251,7 @@ class TallaController extends Controller
         $busqueda = $request->query->get('search');
         
         $em = $this->getDoctrine()->getEntityManager();
-        $rowsTotal = $em->getRepository('TiendaEcommerceBundle:Talla')->findAll();
+        $rowsTotal = $em->getRepository('TiendaEcommerceBundle:Talla')->findBy(array('estado' => 1));
         
         $row['draw']=$draw++;  
         $row['recordsTotal'] = count($rowsTotal);

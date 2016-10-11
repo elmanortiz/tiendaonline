@@ -131,7 +131,7 @@ class ShippingController extends Controller
                                ));  
             
                 return $response; 
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if(method_exists($e,'getErrorCode')){
                     switch (intval($e->getErrorCode())){
                         case 2003: 

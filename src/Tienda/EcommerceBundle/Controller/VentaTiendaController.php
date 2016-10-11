@@ -218,8 +218,7 @@ class VentaTiendaController extends Controller
         $isAjax = $this->get('Request')->isXMLhttpRequest();
         if($isAjax){
             try {
-                $em = $this->getDoctrine()->getManager();
-                
+                $em = $this->getDoctrine()->getManager();                
                 $parameters = $request->request->all();
                 
                 $id = $parameters['id'];
@@ -237,14 +236,23 @@ class VentaTiendaController extends Controller
                 $tallaArray = $parameters['sTalla'];
                 $precioArray = $parameters['precio'];
                 
+                $msgError = 'Existencia insuficiente de:<br>';
+                
                 if ($id!='') {
                     $ventaTienda = $em->getRepository('TiendaEcommerceBundle:OrdenCreada')->findBy(array('idVenta' => $id));
+                    foreach ($ventaTienda as $key => $value) {
+                        $producto = $em->getRepository('TiendaEcommerceBundle:Producto')->find($value);
+                        $talla = $em->getRepository('TiendaEcommerceBundle:Talla')->find($tallaArray[$key]);
+                        $tallaProducto = $em->getRepository('TiendaEcommerceBundle:TallaProducto')->findOneBy(array(
+                                                                                                                'talla_id' => $talla,
+                                                                                                                'producto_id' => $producto                                                                                                                
+                                                                                                            ));
+                                                
+                    }
                     
                     foreach ($ventaTienda as $key => $value) {
                         $producto = $value->getProducto();                        
-                        $producto->setStock($producto->getStock() - $producto->getCantidad());
-                        
-                        //var_dump($producto);
+                        $producto->setStock($producto->getStock() - $producto->getCantidad());                        
                     }
                     
                     //die();
@@ -252,25 +260,40 @@ class VentaTiendaController extends Controller
                     $hayExistencias = 1;
                     foreach ($productoArray as $key => $value) {
                         $producto = $em->getRepository('TiendaEcommerceBundle:Producto')->find($value);
-                        $stock = $producto->getStock();
+                        $talla = $em->getRepository('TiendaEcommerceBundle:Talla')->find($tallaArray[$key]);
+                        $tallaProducto = $em->getRepository('TiendaEcommerceBundle:TallaProducto')->findOneBy(array(
+                                                                                                                'talla_id' => $talla,
+                                                                                                                'producto_id' => $producto                                                                                                                
+                                                                                                            ));
                         
+                        $stock = $tallaProducto->getStock();
                         if(($stock - $cantidadArray[$key]) < 0) {
                             $hayExistencias = 0;
-                        }                        
+                            $msgError.=$producto->getNombre() .', talla: '. $talla->getNombre() . " <br>";
+                        }
                     }
                     
                     if($hayExistencias == 1) {
                         if($registroCliente == 0) {
-                            $cliente = new Cliente();
+                            $existeCliente = $em->getRepository('TiendaEcommerceBundle:Cliente')->findOneBy(array('email' => $correoCliente,
+                                                                                                                  'nombre' => $nombreCliente,
+                                                                                                                  'apellido' => $apellidoCliente
+                                                                                                                ));
+                            
+                            if(is_null($existeCliente)) {
+                                $cliente = new Cliente();
 
-                            $cliente->setNombre($nombreCliente);
-                            $cliente->setApellido($apellidoCliente);
-                            $cliente->setEmail($correoCliente);
-                            $cliente->setTelefono($telefonoCliente);
-                            $cliente->setEstado(1);
+                                $cliente->setNombre($nombreCliente);
+                                $cliente->setApellido($apellidoCliente);
+                                $cliente->setEmail($correoCliente);
+                                $cliente->setTelefono($telefonoCliente);
+                                $cliente->setEstado(1);
 
-                            $em->persist($cliente);
-                            $em->flush();
+                                $em->persist($cliente);
+                                $em->flush();
+                            } else {
+                                $cliente = $existeCliente;
+                            }
                         } else {
                             $cliente = $em->getRepository('TiendaEcommerceBundle:Cliente')->find($clienteId);
                         }
@@ -291,6 +314,11 @@ class VentaTiendaController extends Controller
                         foreach ($productoArray as $key => $value) {
                             $ordenCreada = new OrdenCreada();
                             $producto = $em->getRepository('TiendaEcommerceBundle:Producto')->find($value);
+                            $talla = $em->getRepository('TiendaEcommerceBundle:Talla')->find($tallaArray[$key]);
+                            $tallaProducto = $em->getRepository('TiendaEcommerceBundle:TallaProducto')->findOneBy(array(
+                                                                                                                'talla_id' => $talla,
+                                                                                                                'producto_id' => $producto                                                                                                                
+                                                                                                            ));
 
                             $sql = "select col.nombre from color_producto cpro inner join color col on cpro.color_id = col.id where cpro.producto_id = " . $producto->getId();
                             $stm = $this->container->get('database_connection')->prepare($sql);
@@ -308,14 +336,14 @@ class VentaTiendaController extends Controller
                             $ordenCreada->setColor($color[0]['nombre']);
                             $ordenCreada->setEstado(1);
                             $ordenCreada->setIdVenta($corr);
-                            $ordenCreada->setNumeroReferencia('AST' . $corr);
+                            $ordenCreada->setNumeroReferencia('AST-' . $corr);
 
                             $em->persist($ordenCreada);
                             $em->flush();       
                             
-                            $stock = $producto->getStock();
-                            $producto->setStock($stock - $cantidadArray[$key]);
-                            $em->merge($producto);
+                            $stock = $tallaProducto->getStock();
+                            $tallaProducto->setStock($stock - $cantidadArray[$key]);
+                            $em->merge($tallaProducto);
                             $em->flush();
                         }
 
@@ -323,7 +351,7 @@ class VentaTiendaController extends Controller
                         $data['msg'] = $serverSave;
                         $data['id'] = $corr;
                     } else {
-                        $data['error'] = 'Revise inventario de productos, existencia insuficiente de productos';
+                        $data['error'] = $msgError;
                     }
                 }
                 

@@ -63,7 +63,7 @@ class TallaProducto
      * Set stock
      *
      * @param integer $stock
-     * @return Producto
+     * @return TallaProducto
      */
     public function setStock($stock)
     {
