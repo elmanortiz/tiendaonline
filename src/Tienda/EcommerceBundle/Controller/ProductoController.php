@@ -314,13 +314,16 @@ class ProductoController extends Controller
             unset($colorproducto);
             $colorproducto = new ColorProducto();
         }
-        
+        $totxtalla=$parameters['totaltalla'];
+        //var_dump($parameters['talla']);        
+        //die();
         //insertando las tallas del producto
         $ntalla = count($parameters['talla']);
         for ($i = 0; $i < $ntalla; $i++) {
             $tallaproducto->setProducto($producto); //Id producto
             $talla = $em->getRepository('TiendaEcommerceBundle:Talla')->find($parameters['talla'][$i]);
             $tallaproducto->setTalla($talla);
+            $tallaproducto->setStock($totxtalla[$i]);
             $em->persist($tallaproducto);
             $em->flush();
             unset($tallaproducto);
@@ -397,12 +400,18 @@ class ProductoController extends Controller
                                 where prod.estado = 1 AND prod.id=".$idproducto;
         
         /**Para tallas**/
-        $sqlTallas ="select   taprod.id as idtapro, taprod.talla_id as taid, taprod.producto_id as proid, ta.nombre as tanom
+        $sqlTallas ="select   taprod.id as idtapro, taprod.talla_id as taid, taprod.producto_id as proid, taprod.stock as stock, ta.nombre as tanom
                                 from producto prod
                                 inner join talla_producto taprod on taprod.producto_id = prod.id
                                 inner join talla ta on ta.id = taprod.talla_id                                                                
                                 where prod.estado = 1 AND prod.id=".$idproducto;
         
+        /**Total stock**/
+        $sqlTotalStock = "select   taprod.id as idtapro, taprod.talla_id as taid, taprod.producto_id as proid, SUM(taprod.stock) as stock
+                                from producto prod
+                                inner join talla_producto taprod on taprod.producto_id = prod.id                                
+                                where prod.estado = 1 AND prod.id=" . $idproducto;
+
         /**Para producto**/
         $stm = $this->container->get('database_connection')->prepare($sqlProducto);
         $stm->execute();
@@ -423,9 +432,18 @@ class ProductoController extends Controller
         $stm = $this->container->get('database_connection')->prepare($sqlTallas);
         $stm->execute();
         $result_tallas = $stm->fetchAll();
-                 
+        
+        /** Para total de stock**/
+        $stm = $this->container->get('database_connection')->prepare($sqlTotalStock);
+        $stm->execute();
+        $result_totalstock = $stm->fetchAll();
+        //var_dump($result_totalstock);
+        //die();
+
         $colores = $em->getRepository('TiendaEcommerceBundle:Color')->findBy(array('estado'=>1));                                                
-        $tallas = $em->getRepository('TiendaEcommerceBundle:Talla')->findBy(array('estado'=>1)); 
+        $tallas = $em->getRepository('TiendaEcommerceBundle:Talla')->findBy(array('estado'=>1));
+        //var_dump($result_tallas);
+        //die();
         $categorias = $em->getRepository('TiendaEcommerceBundle:Categoria')->findBy(array('estado'=>1));
                   
         return $this->render('producto/edit.html.twig', array(            
@@ -436,7 +454,8 @@ class ProductoController extends Controller
             'ctlcolores'=>$colores,
             'nmateriales'=>$nmateriales,
             'ctltallas'=>$tallas,
-            'ctlcategorias'=>$categorias           
+            'ctlcategorias'=>$categorias,
+            'totalstock'=>$result_totalstock
         ));
     }
     
@@ -464,7 +483,7 @@ class ProductoController extends Controller
         $producto->setDescripcion($parameters['descripcion']);
         $producto->setNumeroReferencia($parameters['codigo']);
         $producto->setEstado(1);
-        $producto->setStock($parameters['stock']);
+        //$producto->setStock($parameters['stock']);
 
         if (isset($parameters['disponibilidad'])) {
             $producto->setDisponible(0); //Si existe la variable es porque se marco como no disponible
@@ -543,7 +562,9 @@ class ProductoController extends Controller
             unset($colorproducto);
             $colorproducto = new ColorProducto();
         }
-        
+        $totxtalla=$parameters['totaltalla'];
+        //var_dump($totxtalla);
+        //die();
         //Eliminando todos las tallas
         $talladelete=$em->getRepository('TiendaEcommerceBundle:TallaProducto')->findBy(array('producto_id'=>$producto));
         foreach ($talladelete as $row){           
@@ -557,6 +578,7 @@ class ProductoController extends Controller
             $tallaproducto->setProducto($producto); //Id producto
             $talla = $em->getRepository('TiendaEcommerceBundle:Talla')->find($parameters['talla'][$i]);
             $tallaproducto->setTalla($talla);
+            $tallaproducto->setStock($totxtalla[$i]);
             $em->merge($tallaproducto);
             $em->flush();
             unset($tallaproducto);

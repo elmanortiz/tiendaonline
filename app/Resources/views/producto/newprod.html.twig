@@ -66,7 +66,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Codigo de Referencia</label> 
-                                        <input id="stock" name="codigo" type="text" class="form-control validateInput" placeholder="Codigo de Referencia" />
+                                        <input id="codigo" name="codigo" type="text" class="form-control validateInput" placeholder="Codigo de Referencia" />
                                         {#<div class="input-group">
                                             <div class="input-group-addon">PROD</div>
                                             <input id="codigo" name="codigo" type="text" class="form-control" id="exampleInputEmail1" placeholder="Codigo de Referencia" />
@@ -96,9 +96,9 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Existencias totales</label> 
-                                        <input id="stock" name="stock" type="text" class="form-control validateInput" placeholder="Cantidad total de productos actules + nuevos" />
+                                        <input id="stock" name="stock" type="text" value="0" class="form-control validateInput" disabled/>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="clearfix"></div> 
                                     
                                     {#<div class="form-group">            
@@ -114,23 +114,29 @@
                                         <input id="presentacion" name="presentacion" type="text" class="form-control" placeholder="Presentacion" />
                                     </div>#}
                                 <div class="col-md-6">
-                                    <label for="exampleInputEmail1">Colores (Elija un color)</label><br>
-                                    <div class="form-group">
+                                    <label for="exampleInputEmail1" style="margin-bottom:15px;">Colores (Elija un color)</label><br>
+                                    <div class="form-group" style="margin-bottom:0px;">
                                     {% for color in colores %}                                                                                                                                                                                                            
-                                            <input id="" class="chcolor" name="color[]" type="checkbox" value="{{color.id}}" style="margin-right: 5px;">
+                                            <input id="" class="chcolor" name="color[]" type="checkbox" value="{{color.id}}" style="margin-right: 5px; margin-bottom: 5px;">
                                             {{color.nombre}}
-                                            <br>                                        
+                                            <br><br>                                        
                                     {% endfor %}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="exampleInputEmail1">Tallas (Elija al menos una talla)</label><br>
                                     <div class="form-group">
-                                    {% for talla in tallas %}                                                                                                                                                                                                            
-                                            <input id="" class="chtalla" name="talla[]" type="checkbox" value="{{talla.id}}" style="margin-right: 5px;">
-                                            {{talla.nombre}}
-                                            <br>                                        
-                                    {% endfor %}
+                                        <div class="row">
+                                            {% for key, talla in tallas %}                                                                                                                                                                                                            
+                                                <div class="col-md-6" style="margin-top:10px; margin-bottom:10px;">
+                                                    <input id="" class="chtalla" name="talla[]" type="checkbox" value="{{talla.id}}" style="margin-right: 5px;">{{talla.nombre}}                                            
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {#<input id="" class="" name="totaltalla[]" type="text" value="" style="margin-right: 5px;">#}
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -295,7 +301,47 @@
                 
                }
            });
-       }              
+       } 
+       
+        $(".chtalla").on('click', function(e) {
+            var totalexis = 0;
+            var msj="";
+             msj +="<input id='' class='form-control validateInput itemstock' name='totaltalla[]' type='text' value='' style='margin-right: 5px; margin-bottom:5px;' placeholder='Existencias de esta talla'>";
+             if($(this).prop('checked')){
+                 $(this).parent().next().html(msj);
+             }else{
+                 $(this).parent().next().empty();
+             } 
+             
+             //Recalculo al marcar o desmarcar checkbox
+            if($(this).prop('checked')){
+                $(".itemstock").each(function() {
+                    if($(this).val()){
+                        totalexis = totalexis+parseInt($(this).val());
+                    }               
+                });
+            }else{
+                $(".itemstock").each(function() {
+                    if($(this).val()){
+                        totalexis = totalexis+parseInt($(this).val());
+                    }               
+                });
+            }            
+            $("#stock").val(totalexis);
+        });
+        
+        $(document).on('input','.itemstock', function(e) {
+           //alert("asdasdasd");
+           var totalexistencias=0;
+           $(".itemstock").each(function() {
+               if($(this).val()){
+                   totalexistencias = totalexistencias+parseInt($(this).val());
+               }
+               
+           });
+           $("#stock").val(totalexistencias);
+       });
+       
     }); //fin document ready
    </script>
    
