@@ -9,6 +9,7 @@ imports:
 parameters:
     locale: en
     photo.producto: %kernel.root_dir%/../Resources/src/img/producto/
+    photo.carrusel: %kernel.root_dir%/../Resources/src/img/carrusel/
 
 framework:
     #esi:             ~

@@ -34,6 +34,13 @@ class Carrusel
      * @ORM\Column(name="estado", type="boolean", nullable=true)
      */
     private $estado;
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="tipoimagen", type="boolean", nullable=true)
+     */
+    private $tipoimagen;
 
 
 
@@ -91,5 +98,28 @@ class Carrusel
     public function getEstado()
     {
         return $this->estado;
+    }
+    
+    /**
+     * Set estado
+     *
+     * @param boolean $estado
+     * @return Carrusel
+     */
+    public function setTipoImagen($tipoimagen)
+    {
+        $this->tipoimagen= $tipoimagen;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return boolean 
+     */
+    public function getTipoImagen()
+    {
+        return $this->tipoimagen;
     }
 }
