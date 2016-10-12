@@ -16,7 +16,7 @@
 {% block acciones %}
      <div class="col-md-6 text-right panel-body">
           
-          <button class="btPlus btn btn-sm btn-default btn-flat">Agregar</button>
+          
           <button id="formSubmit1" data-loading-text="Loading..." autocomplete="off" class="btAdd btn btn-sm btn-primary btn-flat">Guardar cambios</button>
           <button class="hidden btnShow btn btn-sm btn-success btn-flat">Mostrar</button>
           <button class="hidden btnAction btn btn-sm btn-default btn-flat">Acciones</button>
@@ -29,8 +29,8 @@
     <a href="{{ path('admin_color_index') }}" class="leftnava"><li class="leftnav left ">Colores<span class="pull-right right"><i class=""></i></span></li></a>
     <a href="{{ path('admin_gestionshipping_index') }}" class="leftnava"><li class="leftnav left ">Shipping<span class="pull-right right"><i class=""></i></span></li></a>
     <a href="{{ path('admin_cambio_password', { 'id': app.user.id }) }}" class="leftnava"><li class="leftnav left ">Cambio contraseña<span class="pull-right right"><i class=""></i></span></li></a>
-    <a href="{{ path('admin_imagenes_index') }}" class="leftnava"><li class="leftnav left active">Gestión de carrusel<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
-    <a href="{{ path('admin_imagenes_categorias_index') }}" class="leftnava"><li class="leftnav left ">Gestión de imag/cat<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_imagenes_index') }}" class="leftnava"><li class="leftnav left ">Gestión de carrusel<span class="pull-right right"><i class=""></i></span></li></a>
+    <a href="{{ path('admin_imagenes_categorias_index') }}" class="leftnava"><li class="leftnav left active">Gestión de imag/cat<span class="pull-right right"><i class="fa fa-arrow-right"></i></span></li></a>
 {% endblock %}
 
 {% block contenido %}
@@ -40,9 +40,10 @@
     <div class="col-md-12 col-xs-12">
         <form id="frm">
             <div id="imgForm" class="col-md-12">
-            <input id="tipoimagen" type="hidden" name="tipoimagen" class="input-sm form-control" value="1">
+            <input id="tipoimagen" type="hidden" name="tipoimagen" class="input-sm form-control" value="2">
             
             {% if imagenesObj %}
+                
                 {% for imagen in imagenesObj%}
                     <input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value="{{imagen.id}}">
                     <div class="col-md-4" id="primeraImagen" style="margin-top: 20px;">
@@ -51,18 +52,24 @@
                         <label class="btn btn-default btn-file" style="margin-top:25px;">
                             Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]" id="" class="imgProvider btn-file btn file">
                         </label>
-                        {% if loop.index !=1 %}
-                            <button id="{{imagen.id}}" style="margin-top: 25px;" class="pull-right btn btn-danger removeImagen">Eliminar</button>
-                        {% else %}
-                            <button id="{{imagen.id}}" style="margin-top: 25px;" class="hidden pull-right btn btn-danger removeImagen">Eliminar</button>
-                        {% endif %}
+                        
                        
                     </div>
                 {% endfor %}
             {% else %}
+                
                 <input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value="0">
                 <div class="col-md-4" id="primeraImagen" style="margin-top: 20px;">
-                    <img id="imgTest" src="http://placehold.it/250x250" style="margin-bottom:25px;  margin:auto;">
+                    <img id="imgTest" src="http://placehold.it/250x250" style="margin-bottom:25px; width:100%;  margin:auto;">
+                    <br>
+                    <label class="btn btn-default btn-file" style="margin-top:25px;">
+                        Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]" id="" class="imgProvider btn-file btn file">
+                    </label>
+    {#                <button style="margin-top: 25px;" class="pull-right btn btn-danger removeImagen">Eliminar</button>#}
+                </div>
+                <input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value="0">
+                <div class="col-md-4" id="primeraImagen" style="margin-top: 20px;">
+                    <img id="imgTest" src="http://placehold.it/250x250" style="margin-bottom:25px; width:100%; margin:auto;">
                     <br>
                     <label class="btn btn-default btn-file" style="margin-top:25px;">
                         Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]" id="" class="imgProvider btn-file btn file">
@@ -99,7 +106,6 @@
 
         $(document).ready(function() {
             var numImagenes = 0;
-            var empty=0;
             /////Definición datatable
             $(document).on("change",".file", function() {
             //var atributo=$(this).parent().siblings('img').attr('id');
@@ -108,7 +114,6 @@
                 var input=this;
                 var id = $(input).parent().next().attr('id');
                 console.log(id);
-                empty=0;
 {#                if(id!=0){#}
                     {#$.ajax({
                         url: Routing.generate('admin_save_imagenes'),
@@ -148,7 +153,6 @@
                 }
 		$('#imgForm').append(item);
                 numImagenes++;
-                empty++;
 		return false;
 	});
         $(document).on('click', '.removeImagen', function(event) {
@@ -160,42 +164,38 @@
         
                 $('#frm').on('submit',(function(event) {
 		/*/////Definición de variables*/
-                
-                
 		event.preventDefault();
                 var $btn = $('#formSubmit').button('loading');
                 var $btn1 = $('#formSubmit1').button('loading');
-                if(empty==0){
-                    $.ajax({
-                        url: Routing.generate('admin_save_imagenes'),
-                        type: "POST",
-                        data: new FormData(this),
-                        contentType: false,
-                        cache: false,
-                        processData:false,
-                        success: function(data)
-                        {
-                            if(data.msg){
-                                swal('',data.msg,'success');
-                                console.log(data.ids);
-                                  $('.idsim').each(function( index, element ) {
-                                    // element == this
-                                    $(this).val(data.ids[index]);
-                                  });
-                            }
-                            if(data.error){
-                                swal('',data.error,'error');
-                            }
+		$.ajax({
+                    url: Routing.generate('admin_save_imagenes'),
+                    type: "POST",
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    success: function(data)
+                    {
+                        if(data.msg){
+                            swal('',data.msg,'success');
+                            console.log(data.ids);
+                              $('.idsim').each(function( index, element ) {
+                                // element == this
+                                $(this).val(data.ids[index]);
+                              });
+                        }
+                        if(data.error){
+                            swal('',data.error,'error');
+                        }
+                        $btn.button('reset');
+                        $btn1.button('reset');
+                    },
+                    error:function(data) {
+                            /* Act on the event */
                             $btn.button('reset');
                             $btn1.button('reset');
-                        },
-                        error:function(data) {
-                                /* Act on the event */
-                                $btn.button('reset');
-                                $btn1.button('reset');
-                            }
-                        });
-                    }
+                        }
+                    });
 		
 		event.preventDefault();
 		return false;

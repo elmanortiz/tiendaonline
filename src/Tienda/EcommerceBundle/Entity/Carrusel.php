@@ -38,7 +38,7 @@ class Carrusel
     /**
      * @var boolean
      *
-     * @ORM\Column(name="tipoimagen", type="boolean", nullable=true)
+     * @ORM\Column(name="tipoimagen", type="integer", nullable=true)
      */
     private $tipoimagen;
 
