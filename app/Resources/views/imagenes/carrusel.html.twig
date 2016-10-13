@@ -62,7 +62,7 @@
             {% else %}
                 <input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value="0">
                 <div class="col-md-4" id="primeraImagen" style="margin-top: 20px;">
-                    <img id="imgTest" src="http://placehold.it/250x250" style="margin-bottom:25px;  margin:auto;">
+                    <img id="imgTest" src="http://placehold.it/1600x750" style="margin-bottom:25px;  margin:auto;">
                     <br>
                     <label class="btn btn-default btn-file" style="margin-top:25px;">
                         Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]" id="" class="imgProvider btn-file btn file">
@@ -140,7 +140,7 @@
         /*/////Agregar/remover imagenes*/
 	$(document).on('click', '.btPlus', function(event) {
             
-            var item= '<input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value=""><div style="margin-top: 20px;" class="col-md-4" id="primeraImagen"><img id="imgTest" src="http://placehold.it/250x250" style="width:100%; margin-bottom:25px;  margin:auto;"><br><label class="btn btn-default btn-file" style="margin-top:25px;">';
+            var item= '<input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value=""><div style="margin-top: 20px;" class="col-md-4" id="primeraImagen"><img id="imgTest" src="http://placehold.it/1600x750" style="width:100%; margin-bottom:25px;  margin:auto;"><br><label class="btn btn-default btn-file" style="margin-top:25px;">';
                 item+='Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]" id="" class="imgProvider btn-file btn file "></label><button id="'+numImagenes+'" style="margin-top: 25px;" class="removeImagen pull-right btn btn-danger">Eliminar</button>';
                 item+='</div>';
                 if((numImagenes % 3) ==0){
