@@ -172,7 +172,7 @@ var_dump($idImagen);
                     }
                     else{
                         $imagen= $em->getRepository('TiendaEcommerceBundle:Carrusel')->find($idImagen[$key]);
-                            echo "activados";
+//                            echo "activados";
                             $imagen->setEstado(1);
                             $em->merge($imagen);    
                             $em->flush();
