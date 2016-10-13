@@ -76,8 +76,8 @@ class ImagenesController extends Controller{
             
             $data['d']="";
             
-var_dump($idImagen);
-            var_dump($_FILES);
+//var_dump($idImagen);
+//            var_dump($_FILES);
 //            die();
             $ids=array();
             //Manejo de imagen
@@ -119,7 +119,7 @@ var_dump($idImagen);
                             $fecha = date('Y-m-d-H-i-s');
                             $extensionTmp = $_FILES['file']['type'][$key];
                             $extensionArray= explode('/', $extensionTmp);
-                            var_dump($extensionArray);
+                           // var_dump($extensionArray);
                             
                             $extension = $extensionArray[1];
                             $nombreArchivo =$key.$fecha.".".$extension;
@@ -172,7 +172,7 @@ var_dump($idImagen);
                     }
                     else{
                         $imagen= $em->getRepository('TiendaEcommerceBundle:Carrusel')->find($idImagen[$key]);
-//                            echo "activados";
+                           //echo "activados";
                             $imagen->setEstado(1);
                             $em->merge($imagen);    
                             $em->flush();
@@ -187,12 +187,12 @@ var_dump($idImagen);
             //for
             $data['ids']=$idImagen;
             $data['msg']="Imágenes guardadas!";
-            die();
+//            die();
                         
             $response->setData($data); 
             
         } catch (\Exception $e) {
-            var_dump($e);
+            //var_dump($e);
             if(method_exists($e,'getErrorCode')){
                 switch (intval($e->getErrorCode()))
                     {
