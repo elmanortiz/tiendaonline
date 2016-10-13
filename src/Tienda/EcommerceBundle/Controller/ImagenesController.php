@@ -76,12 +76,12 @@ class ImagenesController extends Controller{
             
             $data['d']="";
             
-//var_dump($tipoImagen);
+//var_dump($idImagen);
 //            var_dump($_FILES);
 //            die();
             $ids=array();
             //Manejo de imagen
-            $nombreTmp = $_FILES['file']['name'];
+            
             //$carruselAnterior= $em->getRepository('TiendaEcommerceBundle:Carrusel')->findAll();
             $carruselAnterior= $em->getRepository('TiendaEcommerceBundle:Carrusel')->findBy(array('tipoimagen'=>$tipoImagen));
             
@@ -103,9 +103,15 @@ class ImagenesController extends Controller{
                 $em->merge($row2);
                 $em->flush();
             }
+            
+            //$imagen= $em->getRepository('TiendaEcommerceBundle:Carrusel')->find($idImagen[$key]);
+            
+            
+            $nombreTmp="";
                 foreach ($_FILES['file']['name'] as $key => $row){
+                    $imagen =null;
                     $imagen= $em->getRepository('TiendaEcommerceBundle:Carrusel')->find($idImagen[$key]);
-                    
+                    $nombreTmp = $_FILES['file']['name'][$key];
                     if ($nombreTmp!='') {
                         
                         try{
@@ -113,6 +119,8 @@ class ImagenesController extends Controller{
                             $fecha = date('Y-m-d-H-i-s');
                             $extensionTmp = $_FILES['file']['type'][$key];
                             $extensionArray= explode('/', $extensionTmp);
+//                            var_dump($extensionArray);
+                            
                             $extension = $extensionArray[1];
                             $nombreArchivo =$key.$fecha.".".$extension;
                             if($imagen!=null){
@@ -155,9 +163,21 @@ class ImagenesController extends Controller{
                             
                         }
                         catch(\Exception $e){
+                            echo $e->getMessage();
+                            echo $e->getLine();
                         }
                         
                         //var_dump($path);
+                        
+                    }
+                    else{
+                        $imagen= $em->getRepository('TiendaEcommerceBundle:Carrusel')->find($idImagen[$key]);
+//                            echo "activados";
+                            $imagen->setEstado(1);
+                            $em->merge($imagen);    
+                            $em->flush();
+                        
+                            
                         
                     }
                 
@@ -167,7 +187,7 @@ class ImagenesController extends Controller{
             //for
             $data['ids']=$idImagen;
             $data['msg']="Imágenes guardadas!";
-            
+//            die();
                         
             $response->setData($data); 
             

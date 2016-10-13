@@ -8,8 +8,8 @@
 {% endblock %}
 {% block descripcion %}
      <div class="col-md-6">
-          <p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Gestión de categorias de producto</p>
-          <p class="robo" style="font-weight: 300; font-size: 14px; ">Registrar, actualizar y eliminar categorias de productos</p>
+          <p class="robo" style="font-weight: 300; margin-bottom: 0px; font-size: 30px;">Gestión de carrusel</p>
+          <p class="robo" style="font-weight: 300; font-size: 14px; ">Registrar, actualizar y eliminar imagenes del carrusel</p>
      </div>
 
 {% endblock %}
@@ -107,6 +107,7 @@
                 mostrarImagen(this);
                 var input=this;
                 var id = $(input).parent().next().attr('id');
+                $(input).parent().parent().prev().val('');
                 console.log(id);
                 empty=0;
 {#                if(id!=0){#}
@@ -135,6 +136,10 @@
                     });#}
 {#                }#}
             });
+            
+            $(document).on('click','#formSubmit1', function(event) {
+                $('#frm').submit();
+            });
         
         /*/////Agregar/remover imagenes*/
 	$(document).on('click', '.btPlus', function(event) {
@@ -152,7 +157,9 @@
 		return false;
 	});
         $(document).on('click', '.removeImagen', function(event) {
-		$(this).parent().remove();
+		
+		$(this).parent().prev().remove();
+                $(this).parent().remove();
                 numImagenes--;
 		return false;
 	});
