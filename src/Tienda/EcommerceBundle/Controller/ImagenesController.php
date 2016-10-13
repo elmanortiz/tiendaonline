@@ -76,8 +76,8 @@ class ImagenesController extends Controller{
             
             $data['d']="";
             
-//var_dump($idImagen);
-//            var_dump($_FILES);
+var_dump($idImagen);
+            var_dump($_FILES);
 //            die();
             $ids=array();
             //Manejo de imagen
@@ -113,32 +113,24 @@ class ImagenesController extends Controller{
                     $imagen= $em->getRepository('TiendaEcommerceBundle:Carrusel')->find($idImagen[$key]);
                     $nombreTmp = $_FILES['file']['name'][$key];
                     if ($nombreTmp!='') {
-                        echo "if nombre";
                         
                         try{
 //                            var_dump($imagen);
                             $fecha = date('Y-m-d-H-i-s');
                             $extensionTmp = $_FILES['file']['type'][$key];
                             $extensionArray= explode('/', $extensionTmp);
-//                            var_dump($extensionArray);
+                            var_dump($extensionArray);
                             
                             $extension = $extensionArray[1];
                             $nombreArchivo =$key.$fecha.".".$extension;
                             if($imagen!=null){
                                 //unlink($path.$imagen->getNombre());
                                 if($tipoImagen!=2){
-                                    echo "imagen tipo 1";
                                     $imagen->setEstado(1);
                                     $imagen->setNombre($key.$nombreArchivo);
                                     $em->merge($imagen);    
                                     $em->flush();
                                 }
-//                                else{
-//                                    $imagen->setEstado(1);
-//                                    $imagen->setNombre($key.$nombreArchivo);
-//                                    $em->persist($imagen);    
-//                                    $em->flush();
-//                                }
                                 $idImagen[$key]=$imagen->getId();
                                 if(move_uploaded_file($_FILES['file']['tmp_name'][$key], $path.$nombreArchivo)){
                                     $carrusel=new Carrusel();
@@ -152,7 +144,7 @@ class ImagenesController extends Controller{
                                 }
                             }
                             else{
-                                echo "imagen tipo 1";
+                                
                                 //var_dump($nombreArchivo);
                                 if(move_uploaded_file($_FILES['file']['tmp_name'][$key], $path.$nombreArchivo)){
                                     $carrusel=new Carrusel();
@@ -180,19 +172,13 @@ class ImagenesController extends Controller{
                     }
                     else{
                         $imagen= $em->getRepository('TiendaEcommerceBundle:Carrusel')->find($idImagen[$key]);
-//                            echo "activados";
+                            echo "activados";
                             $imagen->setEstado(1);
                             $em->merge($imagen);    
                             $em->flush();
                         
                             
                         
-                    }
-                    else{
-                        $imagen= $em->getRepository('TiendaEcommerceBundle:Carrusel')->find($idImagen[$key]);
-                        $imagen->setEstado(true);
-                        $em->merge($imagen);    
-                        $em->flush();
                     }
                 
             }
@@ -201,13 +187,12 @@ class ImagenesController extends Controller{
             //for
             $data['ids']=$idImagen;
             $data['msg']="Imágenes guardadas!";
-//            die();
+            die();
                         
             $response->setData($data); 
             
         } catch (\Exception $e) {
-            echo $e->getMessage();
-                            echo $e->getLine();
+            var_dump($e);
             if(method_exists($e,'getErrorCode')){
                 switch (intval($e->getErrorCode()))
                     {
@@ -224,100 +209,6 @@ class ImagenesController extends Controller{
         
         return $response;
         
-    }
-    
-    
-    
-    
-    
-    /**
-     * @Route("/ingresar_empresa_persona/get", name="ingresar_foto_persona", options={"expose"=true})
-     * @Method("POST")
-     */
-    public function RegistrarFotoAction(Request $request) {
-            //data es el valor de retorno de ajax donde puedo ver los valores que trae dependiendo de las instrucciones que hace dentro del controlador
-           
-            $nombreimagen2=" ";
-            $idConsulta = $request->get('id');
-            $dataForm = $request->get('frm');
-            
-            $tipoImagen = $_POST["tipo"];
-            
-            
-            
-            //var_dump($idConsulta);
-            
-//            var_dump(count($_FILES['file']['name']));
-            $em = $this->getDoctrine()->getManager();
-            //$consulta = $em->getRepository('TiendaEcommerceBundle:Carrusel')->find($idConsulta);
-//            $totalImagen = $em->getRepository('TiendaEcommerceBundle:Carrusel')->findBy(array('consulta'=>$idConsulta));
-//            var_dump($totalImagen);
-            $arr = Array();
-//            for($i=0;$i<count($_FILES['file']['name']);$i++){
-                //$nombreimagen=$_FILES['file']['name'][$i];    
-                $nombreimagen=$_FILES['file']['name'];
-
-                
-
-
-                //$tipo = $_FILES['file']['type'][$i];
-                $tipo = $_FILES['file']['type'];
-                $extension= explode('/',$tipo);
-                $nombreimagen2.=".".$extension[1];
-            
-                if ($nombreimagen != null){
-                    
-                    $imagen = new Carrusel();
-                    
-                    
-//                    die();
-//                    $imagen->setConsulta($consulta);
-                    
-                    
-                    //Direccion fisica del la imagen  
-                    $path1 = $this->container->getParameter('photo.carrusel');
-
-                    $path = "Photos/perfil/E";
-                    $fecha = date('Y-m-d His');
-
-                    $nombreArchivo = "-".$fecha.$nombreimagen2;
-
-                    $nombreBASE=$path.$nombreArchivo;
-                    $nombreBASE=str_replace(" ","", $nombreBASE);
-                    $nombreSERVER =str_replace(" ","", $nombreArchivo);
-                    $imagen->setNombre($nombreSERVER);
-                    $imagen->setEstado(1);
-                    $imagen->setTipoImagen($tipoImagen);
-                    //$resultado = move_uploaded_file($_FILES["file"]["tmp_name"][$i], $path1.$nombreSERVER);
-                    $resultado = move_uploaded_file($_FILES["file"]["tmp_name"], $path1.$nombreSERVER);
-                    $em->persist($imagen);
-                    $em->flush();
-                    $arregloim=Array();
-
-                    if ($resultado){
-                        //array_push($arregloim, count($totalImagen));
-                        array_push($arregloim, $imagen->getId());
-                        array_push($arregloim, $imagen->getNombre());
-                        array_push($arr, $arregloim);
-                    }else{
-                        array_push($arr, 0);
-//                        $data['servidor'] = "No se pudo mover la imagen al servidor";
-//                        $data['servidor'] = "No se pudo mover la imagen al servidor";
-                    }
-                }
-                else{
-                    //$data['imagen'] = "Imagen invalida";
-
-
-                }
-//            }
-
-//            return $this->redirect($this->generateUrl('admin_imagenes_index'));
-            return new Response(json_encode($arr));
-            
-
-      
-            
     }
     
     

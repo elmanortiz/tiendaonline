@@ -5,7 +5,6 @@
 {% block customcss %}
     <link rel="stylesheet" href="{{ asset('Resources/customscss/salestage.css') }}">
     <link rel="stylesheet" href="{{ asset('Resources/slider/css/bootstrap-slider.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('Resources/dropzone/dropzone.css') }}">
 {% endblock %}
 {% block descripcion %}
      <div class="col-md-6">
@@ -17,8 +16,8 @@
 {% block acciones %}
      <div class="col-md-6 text-right panel-body">
           
-          {#<button class="btPlus btn btn-sm btn-default btn-flat">Agregar</button>
-          <button id="formSubmit1" data-loading-text="Loading..." autocomplete="off" class="btAdd btn btn-sm btn-primary btn-flat">Guardar cambios</button>#}
+          <button class="btPlus btn btn-sm btn-default btn-flat">Agregar</button>
+          <button id="formSubmit1" data-loading-text="Loading..." autocomplete="off" class="btAdd btn btn-sm btn-primary btn-flat">Guardar cambios</button>
           <button class="hidden btnShow btn btn-sm btn-success btn-flat">Mostrar</button>
           <button class="hidden btnAction btn btn-sm btn-default btn-flat">Acciones</button>
      </div>
@@ -39,50 +38,19 @@
     
     <div class="clearfix"></div>
     <div class="col-md-12 col-xs-12">
-        
-        {#<form class="dropzone" id="formImagen" role="form" enctype="multipart/form-data" method="post" action="{{path('ingresar_foto_persona')}}">
-            <div class="fallback">
-                <input name="file[]" type="file" multiple required id="file-input"/>
-            </div>
-            <input type="hidden" id="tipo" value="1" name="tipo" class="form-control input-sm"/>
-        </form>#}
-         <div class="row">
-                                        <div class="col-md-12 dropzone" id="zonaDeImagenes" >
-                                            <div class="fallback">
-                                                <input name="file[]" type="file" multiple required id="file-input"/>
-
-                                            </div>
-                                            {#<input type="hidden" name="idMaquinaInsercionImagen" id="idMaquinaInsercionImagen" value="">#}
-                                            <input type="hidden" id="idConsulta" value="1" name="tipo" class="form-control input-sm"/>                                    
-                                        </div>   
-                                        
-
-
-                                    </div>
-                                    <div class="row" id="mostrarImagenes" style="margin-top: 20px;">
-
-
-
-                                    </div>
-        <div class="col-md-12" id="listadoImagenes">
-                                    {% for imagen in imagenesObj %}
-                                        <div class="col-md-2" style="margin-top:10px;">
-                                            <a class="verImagen" href="{{ asset('Resources/src/img/carrusel/')}}{{imagen.nombre}}">
-                                            <img style="width:100%;" src="{{ asset('Resources/src/img/carrusel/')}}{{imagen.nombre}}"></a>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-       {#<form id="frm" enctype="multipart/form-data" method='POST' action='{{path('admin_save_imagenes')}}'>
+        <form id="frm">
             <div id="imgForm" class="col-md-12">
             <input id="tipoimagen" type="hidden" name="tipoimagen" class="input-sm form-control" value="1">
-            #}
+            
             {% if imagenesObj %}
                 {% for imagen in imagenesObj%}
                     <input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value="{{imagen.id}}">
                     <div class="col-md-4" id="primeraImagen" style="margin-top: 20px;">
                         <img id="imgTest" src="{{asset('Resources/src/img/carrusel/')}}{{imagen.nombre}}" style="margin-bottom:25px; width:100%; margin:auto;">
                         <br>
-                        
+                        <label class="btn btn-default btn-file" style="margin-top:25px;">
+                            Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]" id="" class="imgProvider btn-file btn file">
+                        </label>
                         {% if loop.index !=1 %}
                             <button id="{{imagen.id}}" style="margin-top: 25px;" class="pull-right btn btn-danger removeImagen">Eliminar</button>
                         {% else %}
@@ -92,30 +60,29 @@
                     </div>
                 {% endfor %}
             {% else %}
-                <input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value="">
+                <input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value="0">
                 <div class="col-md-4" id="primeraImagen" style="margin-top: 20px;">
-                    <img id="imgTest" src="http://placehold.it/250x250" style="margin-bottom:25px; width:100%; margin:auto;">
+                    <img id="imgTest" src="http://placehold.it/250x250" style="margin-bottom:25px;  margin:auto;">
                     <br>
                     <label class="btn btn-default btn-file" style="margin-top:25px;">
-                        Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]" class="imgProvider btn-file btn file">
+                        Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]" id="" class="imgProvider btn-file btn file">
                     </label>
-                    <button style="margin-top: 25px;" class="pull-right btn btn-danger removeImagen">Eliminar</button>
+    {#                <button style="margin-top: 25px;" class="pull-right btn btn-danger removeImagen">Eliminar</button>#}
                 </div>
             {% endif %}
             </div>
             <div class="clearfix"></div>
             <div class="col-md-12 " style="margin-top: 25px;">
-{#                <button id="formSubmit" class="pull-right btn btn-sm btn-primary btn-flat">Guardar cambios</button>#}
+                <button id="formSubmit" class="pull-right btn btn-sm btn-primary btn-flat">Guardar cambios</button>
             </div>
             
-        {#</form>#}
+        </form>
     </div>
     
 {% endblock %}
 
 {% block js_extend %}
 <script type="text/javascript" src="{{ asset('Resources/validations/validation.js') }}"></script>
-<script src="{{ asset('Resources/dropzone/dropzone.js') }}"></script>
     {#<script type="text/javascript" src="{{ asset('Resources/persist/categoria/categoria.js') }}"></script> 
     <script type="text/javascript" src="{{ asset('Resources/animations/funciones.js') }}"></script> 
     <script type="text/javascript" src="{{ asset('Resources/animations/categoria/categoria.js') }}"></script> #}
@@ -143,7 +110,7 @@
                 $(input).parent().parent().prev().val('');
                 console.log(id);
                 empty=0;
-                if(id!=0){
+{#                if(id!=0){#}
                     {#$.ajax({
                         url: Routing.generate('admin_save_imagenes'),
                         type: "POST",
@@ -167,18 +134,14 @@
 
                             }
                     });#}
-                }
-            });
-            
-            $(document).on('click','#formSubmit1', function(event) {
-                $('#frm').submit();
+{#                }#}
             });
         
         /*/////Agregar/remover imagenes*/
 	$(document).on('click', '.btPlus', function(event) {
             
-            var item= '<input type="hidden" name="idImagen[]" class="idsim input-sm form-control" value=""><div style="margin-top: 20px;" class="col-md-4" id="primeraImagen"><img id="imgTest" src="http://placehold.it/250x250" style="width:100%; margin-bottom:25px;  margin:auto;"><br><label class="btn btn-default btn-file" style="margin-top:25px;">';
-                item+='Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]"  class="imgProvider btn-file btn file "></label><button id="'+numImagenes+'" style="margin-top: 25px;" class="removeImagen pull-right btn btn-danger">Eliminar</button>';
+            var item= '<input id="idImagen" type="hidden" name="idImagen[]" class="idsim input-sm form-control" value=""><div style="margin-top: 20px;" class="col-md-4" id="primeraImagen"><img id="imgTest" src="http://placehold.it/250x250" style="width:100%; margin-bottom:25px;  margin:auto;"><br><label class="btn btn-default btn-file" style="margin-top:25px;">';
+                item+='Explorar <br><input style="display:none;margin-top:25px;" type="file" name="file[]" id="" class="imgProvider btn-file btn file "></label><button id="'+numImagenes+'" style="margin-top: 25px;" class="removeImagen pull-right btn btn-danger">Eliminar</button>';
                 item+='</div>';
                 if((numImagenes % 3) ==0){
                     {#item+='<div class="clearfix"> </div>';#}
@@ -196,50 +159,10 @@
                 numImagenes--;
 		return false;
 	});
-        
-        
-         var idConsulta = $('#idConsulta').val();
-        console.log('consulta: "'+idConsulta+'"');
-        
-        if(idConsulta!=''){
-            $('.imagenMensaje').addClass('hidden');
-            $('.imagenContent').removeClass('hidden');    
-            var url = Routing.generate('ingresar_foto_persona');
-            console.log('url: "'+url+'"');
-            $('#zonaDeImagenesnew').hide();
-            $("#zonaDeImagenes").dropzone({
-                url: url,
-                method: "post",
-                createImageThumbnails: false,
-                addRemoveLinks: true,
-                success: function(file, response){
-                    console.log(response);
-                    //var obj = jQuery.parseJSON(response);
-                    //console.log(obj);
-                    //correlativoDiv=correlativoDiv+1;
-                    var formulario='<div class="col-md-2" style="margin-top:20px;">\n\
-                                                       <a class="verImagen" href="/sepes/Photos/Tmp/'+response.foto+'"> <img src="/sepes/Photos/Tmp/'+response.foto+'" style="width: 100%;" id="'+response.id+'">\n\
-                                                    </a><label><i class=\"fa fa-times\"></i></label>\n\
-                                    </div>';
-        
-                    //$(this).removeAllFiles();
-                    $("#listadoImagenes").append(formulario);
-                    //$('.dz-remove').click();
-                    //$("#imgPrueba-"+correlativoDiv).attr("src","/erpconstructora/web/Photos/maquinaria/"+obj.nombreImagen);
-                    /*dop.on("complete", function(file) {
-                        dop.removeFile(file);
-                    });*/
-
-
-           }
-
-           });
-        }
-        else{
-            $('.imagenMensaje').removeClass('hidden');
-            $('.imagenContent').addClass('hidden');    
-        }
 	/*/////Fin de agregar/remover imagenes*/
+        $(document).on('click', '#formSubmit1', function(event) {
+		$('#frm').submit();
+	});
         
                 $('#frm').on('submit',(function(event) {
 		/*/////Definición de variables*/
@@ -284,35 +207,6 @@
 		return false;
 	}));
 	/*/////Fin definición persist data (Save method)*/
-        
-        {#$("#zonaDeImagenes").dropzone({
-                url: Routing.generate('ingresar_foto_persona'),
-                method: "post",
-                createImageThumbnails: false,
-                addRemoveLinks: true,
-                success: function(file, response){
-                    console.log(response);
-                    //var obj = jQuery.parseJSON(response);
-                    //console.log(obj);
-                    //correlativoDiv=correlativoDiv+1;
-                    var formulario='<div class="col-md-2" style="margin-top:20px;">\n\
-                                                       <a class="verImagen" href="/sepes/Photos/Tmp/'+response.foto+'"> <img src="/sepes/Photos/Tmp/'+response.foto+'" style="width: 100%;" id="'+response.id+'">\n\
-                                                    </a><label><i class=\"fa fa-times\"></i></label>\n\
-                                    </div>';
-        
-                    //$(this).removeAllFiles();
-                    $("#listadoImagenes").append(formulario);
-                    //$('.dz-remove').click();
-                    //$("#imgPrueba-"+correlativoDiv).attr("src","/erpconstructora/web/Photos/maquinaria/"+obj.nombreImagen);
-                    /*dop.on("complete", function(file) {
-                        dop.removeFile(file);
-                    });*/
-
-
-           }
-
-           });#}
-        
         
         
        
